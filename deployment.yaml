@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zircon-bet-service
+  namespace: zircon
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30003
+  selector:
+    instance: zircon-bet-service
+    name: zircon-bet-service
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zircon-bet-service
+  namespace: zircon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: zircon-bet-service
+      instance: zircon-bet-service
+  template:
+    metadata:
+      labels:
+        name: zircon-bet-service
+        instance: zircon-bet-service
+        component: zircon-bet-service
+        version: ${COMMIT}
+    spec:
+      containers:
+      - name: zircon-bet-service
+        image: ${DOCKER_IMAGE}:${COMMIT}
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: zircon-bet-service-cm
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        ports:
+        - containerPort: 80
+

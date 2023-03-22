@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">./app</directory>
+    </include>
+    <exclude>
+            <directory suffix=".php">app/Console</directory>
+            <directory suffix=".php">app/DataStructures</directory>
+            <directory suffix=".php">app/Events</directory>
+            <directory suffix=".php">app/Exceptions</directory>
+            <directory suffix=".php">app/Http/Middleware</directory>
+            <directory suffix=".php">app/Jobs</directory>
+            <directory suffix=".php">app/Libraries</directory>
+            <directory suffix=".php">app/Listeners</directory>
+            <directory suffix=".php">app/Models</directory>
+            <directory suffix=".php">app/Providers</directory>
+            <directory suffix=".php">app/Repositories</directory>
+        </exclude>
+  </coverage>
+  <testsuites>
+    <testsuite name="Unit">
+      <directory suffix="Test.php">./tests/Unit</directory>
+    </testsuite>
+    <testsuite name="Feature">
+      <directory suffix="Test.php">./tests/Features</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
