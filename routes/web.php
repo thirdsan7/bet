@@ -4,6 +4,7 @@
 
 use App\Http\Middleware\DBTransaction;
 use App\Http\Middleware\EyeconDBTransaction;
+use App\Http\Middleware\FunkyAuthenticationToken;
 use App\Http\Middleware\FunkyDBTransaction;
 
 /*
@@ -24,6 +25,10 @@ $router->get('/', function () use ($router) {
 $router->group(['middleware' => DBTransaction::class], function () use ($router) {
 
     $router->post('sellbet', ['uses' => 'ZirconController@sellBet']);
+
     $router->get('api/eyecon', ['uses' => 'EyeconController@entry']);
-    $router->post('Funky/Bet/PlaceBet', ['uses' => 'FunkyController@placeBet']);
+
+    $router->group(['middleware' => FunkyAuthenticationToken::class], function () use ($router) {
+        $router->post('Funky/Bet/PlaceBet', ['uses' => 'FunkyController@placeBet']);
+    });
 });

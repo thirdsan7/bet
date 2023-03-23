@@ -34,13 +34,52 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 0,
                 'errorMessage' => 'NoError',    
                 'data' => [
                     'balance' => 1000
                 ]
+            ]);
+    }
+
+    public function test_placeBet_validDataWrongAuthenticationToken_expectedResponse()
+    {
+        $request = [
+            'bet' => [
+                'gameCode' => 1,
+                'refNo' => 10,
+                'stake' => 100
+            ],
+            'sessionId' => 1,
+            'playerIp' => 'playerIp'
+        ];
+
+        $lcApiResponse = json_encode([
+            'errorCode' => 0,
+            'errorMessage' => 'Success',
+            'data' => [
+                'balance' => 1000   
+            ]
+        ]);
+
+        Http::fake([
+            '*' => Http::response($lcApiResponse)
+        ]);
+
+        $headers = [
+            'Authentication' => 'invalid_authentication_token'
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
+            ->seeJson([
+                'errorCode' => 400,
+                'errorMessage' => 'Invalid input'
             ]);
     }
 
@@ -56,7 +95,11 @@ class PlaceBetTest extends TestCase
             // 'playerIp' => 'playerIp' //playerIp removed
         ];
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 400,
                 'errorMessage' => 'Invalid input'
@@ -75,7 +118,11 @@ class PlaceBetTest extends TestCase
             'playerIp' => 'playerIp'
         ];
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 400,
                 'errorMessage' => 'Invalid input'
@@ -94,7 +141,11 @@ class PlaceBetTest extends TestCase
             'playerIp' => 'playerIp'
         ];
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 401,
                 'errorMessage' => 'Player is not login'
@@ -113,7 +164,11 @@ class PlaceBetTest extends TestCase
             'playerIp' => 'playerIp'
         ];
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 405,
                 'errorMessage' => 'API suspended'
@@ -132,7 +187,11 @@ class PlaceBetTest extends TestCase
             'playerIp' => 'playerIp'
         ];
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 403,
                 'errorMessage' => 'Bet already exists'
@@ -159,7 +218,11 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 401,
                 'errorMessage' => 'Player is not login'
@@ -186,7 +249,11 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 402,
                 'errorMessage' => 'Insufficient balance'
@@ -213,7 +280,11 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 403,
                 'errorMessage' => 'Bet already exists'
@@ -240,7 +311,11 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 405,
                 'errorMessage' => 'API suspended'
@@ -267,7 +342,11 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 406,
                 'errorMessage' => 'Over the max winning'
@@ -294,7 +373,11 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 407,
                 'errorMessage' => 'Over the max loss'
@@ -321,7 +404,11 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 409,
                 'errorMessage' => 'Bet was already settled'
@@ -348,7 +435,11 @@ class PlaceBetTest extends TestCase
             '*' => Http::response($lcApiResponse)
         ]);
 
-        $this->json('POST', '/Funky/Bet/PlaceBet', $request)
+        $headers = [
+            'Authentication' => env('FUNKY_ZIRCON_TOKEN')
+        ];
+
+        $this->json('POST', '/Funky/Bet/PlaceBet', $request, $headers)
             ->seeJson([
                 'errorCode' => 410,
                 'errorMessage' => 'Bet was already cancelled'

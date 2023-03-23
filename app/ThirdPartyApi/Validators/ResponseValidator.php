@@ -48,6 +48,9 @@ class ResponseValidator
 
     private function handleErrorCode($errorCode): void
     {
+        if($errorCode === 0)
+            return;
+
         switch($errorCode) {
             case 401:
                 throw new PlayerNotLoggedInException;
