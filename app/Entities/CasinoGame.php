@@ -2,12 +2,11 @@
 namespace App\Entities;
 use App\Entities\Interfaces\IGame;
 use App\Exceptions\Game\GameIDNotFoundException;
-use App\Exceptions\General\DBDataNotFound;
-use App\Exceptions\General\InvalidInputException;
 use App\Repositories\GameRepository;
 
 class CasinoGame implements IGame
 {
+    const TEST_MODE_ENABLED = 1;
     private $repo;
     private $gameID;
     private $isTestModeEnabled;
@@ -15,12 +14,24 @@ class CasinoGame implements IGame
     {
         $this->repo = $repo;
     }
-
+    
+    /**
+     * returns gameID
+     *
+     * @return int
+     */
     public function getGameID(): int
     {
         return $this->gameID;
     }
-
+    
+    /**
+     * initialize class by getting data from DB via Repository with the given gameID
+     *
+     * @param  int $gameID
+     * @return void
+     * @throws GameIDNotFoundException
+     */
     public function initByGameID(int $gameID): void
     {
         $game = $this->repo->getByGameID($gameID);
@@ -31,10 +42,15 @@ class CasinoGame implements IGame
         $this->gameID = $game->gameID;
         $this->isTestModeEnabled = $game->isTestModeEnabled;
     }
-
+    
+    /**
+     * returns a bool depending on the data isTestModeEnabled
+     *
+     * @return bool
+     */
     public function isUnderMaintenance(): bool
     {
-        if($this->isTestModeEnabled == 1)
+        if($this->isTestModeEnabled === self::TEST_MODE_ENABLED)
             return true;
 
         return false;

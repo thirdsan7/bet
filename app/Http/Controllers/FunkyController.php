@@ -4,22 +4,10 @@ namespace App\Http\Controllers;
 use App\Entities\Player;
 use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
-use App\Exceptions\Game\GameIDNotFoundException;
 use App\Services\BetService;
 use Illuminate\Http\Request;
 use App\Libraries\LaravelLib;
 use App\Responses\FunkyResponse;
-use Illuminate\Database\QueryException;
-use App\Exceptions\General\DBDataNotFound;
-use App\Exceptions\Player\BetLimitException;
-use App\Exceptions\General\InvalidInputException;
-use App\Exceptions\Player\MaxWinningLimitException;
-use App\Exceptions\Player\BalanceNotEnoughException;
-use App\Exceptions\Player\PlayerNotLoggedInException;
-use App\Exceptions\Game\SystemUnderMaintenanceException;
-use App\Exceptions\Transaction\RoundAlreadyExistsException;
-use App\Exceptions\Transaction\RoundAlreadySettledException;
-use App\Exceptions\Transaction\RoundAlreadyCancelledException;
 
 class FunkyController extends Controller
 {

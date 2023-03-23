@@ -8,7 +8,15 @@ use Illuminate\Http\JsonResponse;
 
 class ZirconResponse
 {
-const RUNNING_EVENT = 'R';
+const RUNNING_EVENT = 'R';    
+    /**
+     * formatted zircon response for sellBet
+     *
+     * @param  IPlayer $player
+     * @param  IGame $game
+     * @param  IBet $bet
+     * @return JsonResponse
+     */
     public function sellBet(IPlayer $player, IGame $game, IBet $bet): JsonResponse
     {
         return response()->json([
@@ -24,7 +32,13 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formattez zircon response for invalidInput
+     *
+     * @param  string $errors
+     * @return JsonResponse
+     */
     public function invalidInput(string $errors): JsonResponse
     {
         return response()->json([
@@ -35,7 +49,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for invalidGameID
+     *
+     * @return JsonResponse
+     */
     public function invalidGameID(): JsonResponse
     {
         return response()->json([
@@ -46,7 +65,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for playerNotLoggedIn
+     *
+     * @return JsonResponse
+     */
     public function playerNotLoggedIn(): JsonResponse
     {
         return response()->json([
@@ -56,7 +80,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for systemUnderMaintenance 
+     *
+     * @return JsonResponse
+     */
     public function systemUnderMaintenance(): JsonResponse
     {
         return response()->json([
@@ -66,7 +95,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for betAlreadyExists
+     *
+     * @return JsonResponse
+     */
     public function betAlreadyExists(): JsonResponse
     {
         return response()->json([
@@ -76,7 +110,13 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for somethingWentWrong
+     *
+     * @param  string $message
+     * @return JsonResponse
+     */
     public function somethingWentWrong(string $message): JsonResponse
     {
         return response()->json([
@@ -87,7 +127,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for balanceNotEnough
+     *
+     * @return JsonResponse
+     */
     public function balanceNotEnough(): JsonResponse
     {
         return response()->json([
@@ -97,7 +142,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for maxWinningExceed
+     *
+     * @return JsonResponse
+     */
     public function maxWinningExceed(): JsonResponse
     {
         return response()->json([
@@ -107,7 +157,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for betLimitExceed
+     *
+     * @return JsonResponse
+     */
     public function betLimitExceed(): JsonResponse
     {
         return response()->json([
@@ -117,7 +172,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for betAlreadySettled
+     *
+     * @return JsonResponse
+     */
     public function betAlreadySettled(): JsonResponse
     {
         return response()->json([
@@ -127,7 +187,12 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
+    
+    /**
+     * formatted zircon response for betAlreadyCancelled
+     *
+     * @return JsonResponse
+     */
     public function betAlreadyCancelled(): JsonResponse
     {
         return response()->json([

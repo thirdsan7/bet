@@ -24,7 +24,15 @@ class CommonWalletApi implements IMotherApi
         $this->lib = $lib;
         $this->validator = $validator;
     }
-
+    
+    /**
+     * calls CommonWallet API's placeBet
+     *
+     * @param  IPlayer $player
+     * @param  IGame $game
+     * @param  IBet $bet
+     * @return void
+     */
     public function placeBet(IPlayer $player, IGame $game, IBet $bet): void
     {
         $request = [
@@ -51,9 +59,13 @@ class CommonWalletApi implements IMotherApi
         );
 
         $this->validator->validate($this->response);
-
     }
-
+    
+    /**
+     * returns response data from api request.
+     *
+     * @return object
+     */
     public function getData(): object
     {
         $objResponse = json_decode($this->response);

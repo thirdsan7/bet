@@ -5,6 +5,7 @@ use App\Models\Transaction;
 use App\Services\Interfaces\IBet;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Interfaces\ITransactionRepository;
+use Illuminate\Database\QueryException;
 
 class TransactionRepository implements ITransactionRepository
 {
@@ -14,17 +15,19 @@ class TransactionRepository implements ITransactionRepository
     {
         $this->transaction = $transaction;
     }
-
-    public function getByRoundDetIDPlayerIDGameID($roundDetID, $clientID, $gameID): Transaction
-    {
-        return $this->transaction->select('*')
-            ->where('roundDetID', '=', $roundDetID)
-            ->where('sboClientID', '=', $clientID)
-            ->where('gameID', '=', $gameID)
-            ->get()
-            ->first();
-    }
-
+    
+    /**
+     * inserts data into database by values given
+     *
+     * @param  string $roundDetID
+     * @param  int $sboClientID
+     * @param  string $sessionID
+     * @param  int $gameID
+     * @param  float $stake
+     * @param  string $refNo
+     * @return void
+     * @throws QueryException
+     */
     public function create($roundDetID, $sboClientID, $sessionID, $gameID, $stake, $refNo): void
     {
         $this->transaction->create([
@@ -36,20 +39,5 @@ class TransactionRepository implements ITransactionRepository
             'event' => 'R',
             'refNo' => $refNo
         ]);
-    }
-
-    public function beginTransaction()
-    {
-        DB::beginTransaction();
-    }
-
-    public function commit()
-    {
-        DB::commit();
-    }
-
-    public function rollBack()
-    {
-        DB::rollBack();
     }
 }

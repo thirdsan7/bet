@@ -1,8 +1,8 @@
 <?php
 namespace App\Repositories;
 
-use App\Models\GameLoginSession;
 use App\Models\LoginInfo;
+use Illuminate\Database\QueryException;
 
 class PlayerRepository
 {
@@ -12,8 +12,16 @@ class PlayerRepository
     {
         $this->model = $model;
     }
-
-    public function getBySessionIDGameID($sessionID, $gameID)
+        
+    /**
+     * returns getlogininfo joined with gameloginsession and testplayer table data via sessionid and gameid
+     *
+     * @param  int $sessionID
+     * @param  int $gameID
+     * @return LoginInfo|null
+     * @throws QueryException
+     */
+    public function getBySessionIDGameID(int $sessionID, int $gameID): LoginInfo|null
     {
         return $this->model->select('getlogininfo.*', 'gameloginsession.*', 'testplayer.isTestPlayer')
             ->where('getlogininfo.sessionID', $sessionID)

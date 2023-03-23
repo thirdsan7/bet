@@ -15,16 +15,28 @@ use App\Exceptions\Transaction\RoundAlreadyCancelledException;
 
 class ResponseValidator
 {
-
-    private function isHttpCode200($status): bool
+    
+    /**
+     * checks if status is 200
+     *
+     * @param  int $status
+     * @return bool
+     */
+    private function isHttpCode200(int $status): bool
     {
         if($status !== 200)
             return false;
         
         return true;
     }
-
-    private function isResponseJson($response): bool
+    
+    /**
+     * checks if response is a valid json data
+     *
+     * @param  string $response
+     * @return bool
+     */
+    private function isResponseJson(string $response): bool
     {
         json_decode($response);
 
@@ -55,9 +67,27 @@ class ResponseValidator
                 throw new RoundAlreadySettledException;
             case 410:
                 throw new RoundAlreadyCancelledException;
+            default:
+                throw new ThirdPartyException($errorCode);
         }
     }
-
+    
+    /**
+     * validates CommonWallet API response
+     *
+     * @param  Response $response
+     * @return void
+     * @throws PlayerNotLoggedInException
+     * @throws BalanceNotEnoughException
+     * @throws RoundAlreadyExistsException
+     * @throws RoundNotFoundException
+     * @throws SystemUnderMaintenanceException
+     * @throws MaxWinningLimitException
+     * @throws BetLimitException
+     * @throws RoundAlreadySettledException
+     * @throws RoundAlreadyCancelledException
+     * @throws ThirdPartyException
+     */
     public function validate(Response $response): void
     {
         if($this->isHttpCode200($response->status()) === false){

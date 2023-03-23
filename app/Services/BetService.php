@@ -15,8 +15,16 @@ class BetService
     {
         $this->api = $api;
     }
-
-    public function startBet(IPlayer $player, IGame $game, IBet $bet)
+    
+    /**
+     * starts the betting process by validating player and game, then creating records and calling third party api
+     *
+     * @param  IPlayer $player
+     * @param  IGame $game
+     * @param  IBet $bet
+     * @return void
+     */
+    public function startBet(IPlayer $player, IGame $game, IBet $bet): void
     {
         if($game->isUnderMaintenance() === true && $player->isTestPlayer() === false)  
             throw new SystemUnderMaintenanceException();
