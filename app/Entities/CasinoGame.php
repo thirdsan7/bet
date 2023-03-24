@@ -19,6 +19,8 @@ class CasinoGame implements IGame
      * returns gameID
      *
      * @return int
+     * 
+     * @codeCoverageIgnore
      */
     public function getGameID(): int
     {
