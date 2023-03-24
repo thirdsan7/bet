@@ -5,7 +5,7 @@ use App\Entities\Interfaces\IGame;
 
 interface IPlayer
 {
-    public function initBySessionIDGameID(int $sessionID, IGame $game): void;
+    public function initBySessionIDGameID(string $sessionID, IGame $game): void;
     public function isTestPlayer(): bool;
     public function getClientID(): int;
     public function getSessionID(): string;

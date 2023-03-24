@@ -2,6 +2,7 @@
 
 use App\Entities\Interfaces\IGame;
 use App\Entities\Player;
+use App\Exceptions\Player\PlayerNotLoggedInException;
 use App\Models\LoginInfo;
 use App\Repositories\PlayerRepository;
 use Tests\TestCase;
@@ -57,6 +58,25 @@ class PlayerTest extends TestCase
             ]));
 
         $player = $this->makePlayer($mockRepo);
+
+        $player->initBySessionIDGameID($sessionID, $stubGame);
+    }
+
+    public function test_initBySessionIDGameID_stubRepoReturnsEmpty_PlayerNotLoggedInException()
+    {
+        $sessionID = 1;
+
+        $stubGame = $this->createStub(IGame::class);
+        $stubGame->method('getGameID')
+            ->willReturn(1);
+
+        $stubRepo = $this->createStub(PlayerRepository::class);
+        $stubRepo->method('getBySessionIDGameID')
+            ->willReturn(null);
+
+        $this->expectException(PlayerNotLoggedInException::class);
+
+        $player = $this->makePlayer($stubRepo);
 
         $player->initBySessionIDGameID($sessionID, $stubGame);
     }

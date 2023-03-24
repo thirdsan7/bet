@@ -24,6 +24,8 @@ class Player implements IPlayer
      * returns clientID
      *
      * @return int
+     * 
+     * @codeCoverageIgnore
      */
     public function getClientID(): int
     {
@@ -34,6 +36,8 @@ class Player implements IPlayer
      * returns sessionID
      *
      * @return string
+     * 
+     * @codeCoverageIgnore
      */
     public function getSessionID(): string
     {
@@ -45,6 +49,8 @@ class Player implements IPlayer
      *
      * @param  float $balance
      * @return void
+     * 
+     * @codeCoverageIgnore
      */
     public function setBalance(float $balance): void
     {
@@ -55,6 +61,8 @@ class Player implements IPlayer
      * returns balance
      *
      * @return float
+     * 
+     * @codeCoverageIgnore
      */
     public function getBalance(): float
     {
@@ -64,12 +72,12 @@ class Player implements IPlayer
     /**
      * initialize class by getting data from DB via Repository with the given sessionID and Game
      *
-     * @param  int $sessionID
+     * @param  string $sessionID
      * @param  IGame $game
      * @return void
      * @throws PlayerNotLoggedInException
      */
-    public function initBySessionIDGameID(int $sessionID, IGame $game): void
+    public function initBySessionIDGameID(string $sessionID, IGame $game): void
     {
         $player = $this->repo->getBySessionIDGameID($sessionID, $game->getGameID());
 
@@ -99,6 +107,8 @@ class Player implements IPlayer
      * returns ip
      *
      * @return string
+     * 
+     * @codeCoverageIgnore
      */
     public function getIp(): string|null
     {

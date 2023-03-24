@@ -65,6 +65,8 @@ class CommonWalletApi implements IMotherApi
      * returns response data from api request.
      *
      * @return object
+     * 
+     * @codeCoverageIgnore
      */
     public function getData(): object
     {

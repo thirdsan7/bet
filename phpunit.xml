@@ -16,6 +16,7 @@
             <directory suffix=".php">app/Models</directory>
             <directory suffix=".php">app/Providers</directory>
             <directory suffix=".php">app/Repositories</directory>
+            <directory suffix=".php">app/Responses</directory>
         </exclude>
   </coverage>
   <testsuites>

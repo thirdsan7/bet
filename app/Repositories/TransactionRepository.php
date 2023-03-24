@@ -28,7 +28,7 @@ class TransactionRepository implements ITransactionRepository
      * @return void
      * @throws QueryException
      */
-    public function create($roundDetID, $sboClientID, $sessionID, $gameID, $stake, $refNo): void
+    public function create(string $roundDetID, int $sboClientID, string $sessionID, int $gameID, float $stake, string $refNo): void
     {
         $this->transaction->create([
             'roundDetID' => $roundDetID,

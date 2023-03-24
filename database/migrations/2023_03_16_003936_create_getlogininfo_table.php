@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('getlogininfo', function (Blueprint $table) {
             $table->id('getLoginInfoID');
             $table->bigInteger('sboClientID');
-            $table->bigInteger('sessionID');
+            $table->string('sessionID', 40);
             // $table->string('accountID', 50)->nullable();
             // $table->string('clientStatus', 20)->nullable();
             // $table->string('currencyCode', 3)->nullable();

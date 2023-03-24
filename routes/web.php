@@ -2,10 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-use App\Http\Middleware\DBTransaction;
-use App\Http\Middleware\EyeconDBTransaction;
+use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\FunkyAuthenticationToken;
-use App\Http\Middleware\FunkyDBTransaction;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,17 +16,18 @@ use App\Http\Middleware\FunkyDBTransaction;
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+Route::get('/', function () {
+    return json_encode([
+        "APP" => "BET_SERVICE",
+        "VERSION" => env('VERSION')
+    ]);
 });
 
-$router->group(['middleware' => DBTransaction::class], function () use ($router) {
 
-    $router->post('sellbet', ['uses' => 'ZirconController@sellBet']);
+Route::post('sellbet', ['uses' => 'ZirconController@sellBet']);
 
-    $router->get('api/eyecon', ['uses' => 'EyeconController@entry']);
+Route::get('api/eyecon', ['uses' => 'EyeconController@entry']);
 
-    $router->group(['middleware' => FunkyAuthenticationToken::class], function () use ($router) {
-        $router->post('Funky/Bet/PlaceBet', ['uses' => 'FunkyController@placeBet']);
-    });
+Route::group(['middleware' => FunkyAuthenticationToken::class, 'prefix' => 'Funky'], function (){
+    Route::post('Bet/PlaceBet', ['uses' => 'FunkyController@placeBet']);
 });

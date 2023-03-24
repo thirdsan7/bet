@@ -46,6 +46,22 @@ class ResponseValidator
         return true;
     }
 
+    /**
+     * handles error code and return corresponding exception depending on errorCode
+     *
+     * @param  $errorCode
+     * @return void
+     * @throws PlayerNotLoggedInException
+     * @throws BalanceNotEnoughException
+     * @throws RoundAlreadyExistsException
+     * @throws RoundNotFoundException
+     * @throws SystemUnderMaintenanceException
+     * @throws MaxWinningLimitException
+     * @throws BetLimitException
+     * @throws RoundAlreadySettledException
+     * @throws RoundAlreadyCancelledException
+     * @throws ThirdPartyException
+     */
     private function handleErrorCode($errorCode): void
     {
         if($errorCode === 0)

@@ -211,4 +211,40 @@ class ResponseValidatorTest extends TestCase
 
         $validator->validate($response);
     }
+
+    public function test_validate_responseErrorCodeUnknown_ThirdPartyException()
+    {
+        $response = $this->createStub(Response::class);
+        $response->method('body')
+            ->willReturn(json_encode([
+                'errorCode' => -123
+            ]));
+
+        $response->method('status')
+            ->willReturn(200);
+
+        $this->expectException(ThirdPartyException::class);
+
+        $validator = $this->makeValidator();
+
+        $validator->validate($response);
+    }
+
+    public function test_validate_responseErrorCode0_void()
+    {
+        $response = $this->createStub(Response::class);
+        $response->method('body')
+            ->willReturn(json_encode([
+                'errorCode' => 0
+            ]));
+
+        $response->method('status')
+            ->willReturn(200);
+
+        $validator = $this->makeValidator();
+
+        $result = $validator->validate($response);
+
+        $this->assertNull($result);
+    }
 }

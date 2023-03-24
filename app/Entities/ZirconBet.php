@@ -24,6 +24,8 @@ class ZirconBet implements IBet
      * returns roundDetID
      *
      * @return string
+     * 
+     * @codeCoverageIgnore
      */
     public function getRoundDetID(): string
     {
@@ -34,6 +36,8 @@ class ZirconBet implements IBet
      * returns ip
      *
      * @return string
+     * 
+     * @codeCoverageIgnore
      */
     public function getIp(): string
     {
@@ -44,6 +48,8 @@ class ZirconBet implements IBet
      * returns stake
      *
      * @return float
+     * 
+     * @codeCoverageIgnore
      */
     public function getStake(): float
     {
@@ -68,17 +74,14 @@ class ZirconBet implements IBet
      * @param  float $stake
      * @param  string $ip
      * @return void
+     * 
+     * @codeCoverageIgnore
      */
     public function new(string $roundDetID, float $stake, string $ip): void
     {
         $this->roundDetID = $roundDetID;
         $this->stake = $stake;
         $this->ip = $ip;
-    }
-
-    public function betExists(): bool
-    {
-        return false;
     }
     
     /**
