@@ -145,7 +145,7 @@ class ZirconControllerTest extends TestCase
         
         $controller = $this->makeController(null, $mockService);
 
-        // test try
+        // test try again
 
         $controller->sellBet($request, $player, $game, $bet);
     }
