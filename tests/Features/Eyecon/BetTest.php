@@ -14,7 +14,7 @@ class BetTest extends TestCase
     public function test_bet_lcApiResponse1000_expectedResponse()
     {
         $request = [
-            'uid' => 1,
+            'uid' => 1, 
             'guid' => 1,
             'accessid' => 'accessid',
             'type' => 'BET',
@@ -62,6 +62,29 @@ class BetTest extends TestCase
             'wager' => 100,
             'win' => 'win',
             // 'jpwin' => 'jpwin' //remove jpwin
+        ];
+
+        $response = $this->call('GET', '/api/eyecon', $request);
+
+        $response->assertStatus(500);
+    }
+
+    public function test_bet_invalidAccessID_expectedResponse()
+    {
+        $request = [
+            'uid' => 1,
+            'guid' => 1,
+            'accessid' => 'invalid_accessid', //invalid accessid
+            'type' => 'BET',
+            'round' => 20,
+            'gameid' => 1,
+            'ref' => 'ref1',
+            'gtype' => 'gtype',
+            'cur' => 'cur',
+            'status' => 'active',
+            'wager' => 100,
+            'win' => 'win',
+            'jpwin' => 'jpwin'
         ];
 
         $response = $this->call('GET', '/api/eyecon', $request);

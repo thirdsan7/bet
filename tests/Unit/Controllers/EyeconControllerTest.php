@@ -9,19 +9,20 @@ use Illuminate\Http\Request;
 use App\Libraries\LaravelLib;
 use App\Responses\EyeconResponse;
 use App\Http\Controllers\EyeconController;
+use App\Validations\EyeconValidation;
 
 class EyeconControllerTest extends TestCase
 {
-    public function makeController($lib = null, $service = null, $response = null)
+    public function makeController($validation = null, $service = null, $response = null)
     {
-        $lib ??= $this->createStub(LaravelLib::class);
+        $validation ??= $this->createStub(EyeconValidation::class);
         $service ??= $this->createStub(BetService::class);
         $response ??= $this->createStub(EyeconResponse::class);
 
-        return new EyeconController($lib, $service, $response);
+        return new EyeconController($validation, $service, $response);
     }
 
-    public function test_entry_mockLib_validate()
+    public function test_entry_mockValidation_validate()
     {
         $request = new Request([
             'uid' => 'uid',
@@ -46,26 +47,12 @@ class EyeconControllerTest extends TestCase
         $game = $this->createStub(CasinoGame::class);
         $bet = $this->createStub(ZirconBet::class);
 
-        $mockLib = $this->createMock(LaravelLib::class);
-        $mockLib->expects($this->once())
+        $mockValidation = $this->createMock(EyeconValidation::class);
+        $mockValidation->expects($this->once())
             ->method('validate')
-            ->with($request, [
-                'uid' => 'required',
-                'guid' => 'required',
-                'accessid' => 'required',
-                'type' => 'required',
-                'round' => 'required',
-                'gameid' => 'required',
-                'ref' => 'required',
-                'gtype' => 'required',
-                'cur' => 'required',
-                'status' => 'required',
-                'wager' => 'required',
-                'win' => 'required',
-                'jpwin' => 'required'
-            ]);
+            ->with($request);
 
-        $controller = $this->makeController($mockLib);
+        $controller = $this->makeController($mockValidation);
         $controller->entry($request, $player, $game, $bet);
     }
 

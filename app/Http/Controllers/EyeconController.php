@@ -8,42 +8,27 @@ use App\Services\BetService;
 use Illuminate\Http\Request;
 use App\Libraries\LaravelLib;
 use App\Responses\EyeconResponse;
+use App\Validations\EyeconValidation;
 
 class EyeconController extends Controller
 {
     const DUPLICATE_ENTRY = 1062;
-    
-    const EYECON_REQUEST = [
-        'uid' => 'required',
-        'guid' => 'required',
-        'accessid' => 'required',
-        'type' => 'required',
-        'round' => 'required',
-        'gameid' => 'required',
-        'ref' => 'required',
-        'gtype' => 'required',
-        'cur' => 'required',
-        'status' => 'required',
-        'wager' => 'required',
-        'win' => 'required',
-        'jpwin' => 'required'
-    ];
 
-    private $lib;
+    private $validation;
     private $service;
     private $response;
 
 
-    public function __construct(LaravelLib $lib, BetService $service, EyeconResponse $response)
+    public function __construct(EyeconValidation $validation, BetService $service, EyeconResponse $response)
     {
-        $this->lib = $lib;
+        $this->validation = $validation;
         $this->service = $service;
         $this->response = $response;
     }
 
     public function entry(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
     {
-        $this->lib->validate($request, self::EYECON_REQUEST);
+        $this->validation->validate($request);
 
         switch($request->type){
             case 'BET':
