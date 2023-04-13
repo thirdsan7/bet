@@ -6,16 +6,15 @@ use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
 use App\Services\BetService;
 use Illuminate\Http\Request;
-use App\Libraries\LaravelLib;
 use App\Responses\EyeconResponse;
 use App\Http\Controllers\EyeconController;
-use App\Validations\EyeconValidation;
+use App\Validators\EyeconValidator;
 
 class EyeconControllerTest extends TestCase
 {
     public function makeController($validation = null, $service = null, $response = null)
     {
-        $validation ??= $this->createStub(EyeconValidation::class);
+        $validation ??= $this->createStub(EyeconValidator::class);
         $service ??= $this->createStub(BetService::class);
         $response ??= $this->createStub(EyeconResponse::class);
 
@@ -47,7 +46,7 @@ class EyeconControllerTest extends TestCase
         $game = $this->createStub(CasinoGame::class);
         $bet = $this->createStub(ZirconBet::class);
 
-        $mockValidation = $this->createMock(EyeconValidation::class);
+        $mockValidation = $this->createMock(EyeconValidator::class);
         $mockValidation->expects($this->once())
             ->method('validate')
             ->with($request);

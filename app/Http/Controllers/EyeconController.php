@@ -6,9 +6,8 @@ use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
 use App\Services\BetService;
 use Illuminate\Http\Request;
-use App\Libraries\LaravelLib;
 use App\Responses\EyeconResponse;
-use App\Validations\EyeconValidation;
+use App\Validators\EyeconValidator;
 
 class EyeconController extends Controller
 {
@@ -19,7 +18,7 @@ class EyeconController extends Controller
     private $response;
 
 
-    public function __construct(EyeconValidation $validation, BetService $service, EyeconResponse $response)
+    public function __construct(EyeconValidator $validation, BetService $service, EyeconResponse $response)
     {
         $this->validation = $validation;
         $this->service = $service;

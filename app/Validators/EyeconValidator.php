@@ -1,11 +1,11 @@
 <?php
-namespace App\Validations;
+namespace App\Validators;
 
 use App\Exceptions\General\InvalidInputException;
 use App\Libraries\LaravelLib;
 use Illuminate\Http\Request;
 
-class EyeconValidation
+class EyeconValidator
 {
     const EYECON_REQUEST = [
         'uid' => 'required',
@@ -29,13 +29,28 @@ class EyeconValidation
     {
         $this->lib = $lib;
     }
-
+    
+    /**
+     * validates accessid
+     *
+     * @param  string $accessID
+     * @return void
+     * @throws InvalidInputException
+     */
     private function validateAccessID(string $accessID)
     {
-        if($accessID !== config('zircon.EYECON_ACCESS_ID')) 
+        if ($accessID !== config('zircon.EYECON_ACCESS_ID'))
             throw new InvalidInputException('Invalid AccessID');
     }
 
+        
+    /**
+     * validates request if correct format and validates accessid if correct
+     *
+     * @param  Request $request
+     * @return void
+     * @throws InvalidInputException
+     */
     public function validate(Request $request)
     {
         $this->lib->validate($request, self::EYECON_REQUEST);
