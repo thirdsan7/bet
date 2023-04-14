@@ -27,21 +27,21 @@ class EyeconController extends Controller
         'jpwin' => 'required'
     ];
 
-    private $validation;
+    private $validator;
     private $service;
     private $response;
 
 
-    public function __construct(EyeconValidator $validation, BetService $service, EyeconResponse $response)
+    public function __construct(EyeconValidator $validator, BetService $service, EyeconResponse $response)
     {
-        $this->validation = $validation;
+        $this->validator = $validator;
         $this->service = $service;
         $this->response = $response;
     }
 
     public function entry(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
     {
-        $this->validation->validate($request, self::EYECON_REQUEST);
+        $this->validator->validate($request, self::EYECON_REQUEST);
 
         switch($request->type){
             case 'BET':
