@@ -7,7 +7,7 @@ use App\Exceptions\General\InvalidInputException;
 
 class ZirconValidator
 {
-    const SELL_BET_RULES = [
+    protected $sellBetRules = [
         'stake' => 'required',
         'roundDetID' => 'required',
         'roundID' => 'required',
@@ -17,7 +17,7 @@ class ZirconValidator
         'ip' => 'required'
     ];
 
-    private $lib;
+    protected $lib;
 
     public function __construct(LaravelLib $lib)
     {
@@ -33,6 +33,6 @@ class ZirconValidator
      */
     public function validateSellBet(Request $request)
     {
-        $this->lib->validate($request, self::SELL_BET_RULES);
+        $this->lib->validate($request, $this->sellBetRules);
     }
 }
