@@ -11,7 +11,21 @@ use App\Validators\EyeconValidator;
 
 class EyeconController extends Controller
 {
-    const DUPLICATE_ENTRY = 1062;
+    const EYECON_REQUEST = [
+        'uid' => 'required',
+        'guid' => 'required',
+        'accessid' => 'required',
+        'type' => 'required',
+        'round' => 'required',
+        'gameid' => 'required',
+        'ref' => 'required',
+        'gtype' => 'required',
+        'cur' => 'required',
+        'status' => 'required',
+        'wager' => 'required',
+        'win' => 'required',
+        'jpwin' => 'required'
+    ];
 
     private $validation;
     private $service;
@@ -27,7 +41,7 @@ class EyeconController extends Controller
 
     public function entry(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
     {
-        $this->validation->validate($request);
+        $this->validation->validate($request, self::EYECON_REQUEST);
 
         switch($request->type){
             case 'BET':

@@ -8,15 +8,23 @@ use App\Services\BetService;
 use Illuminate\Http\Request;
 use App\Responses\FunkyResponse;
 use App\Validators\FunkyValidator;
+use App\Validators\Validator;
 
 class FunkyController extends Controller
 {
+    const PLACE_BET_RULES = [
+        'bet.gameCode' => 'required',
+        'bet.refNo' => 'required',
+        'bet.stake' => 'required',
+        'sessionId' => 'required',
+        'playerIp' => 'required'
+    ];
     private $validator;
     private $service;
     private $response;
 
 
-    public function __construct(FunkyValidator $validator, BetService $service, FunkyResponse $response)
+    public function __construct(Validator $validator, BetService $service, FunkyResponse $response)
     {
         $this->validator = $validator;
         $this->service = $service;
@@ -25,7 +33,7 @@ class FunkyController extends Controller
 
     public function placeBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
     {
-        $this->validator->validateSellBet($request);
+        $this->validator->validate($request, self::PLACE_BET_RULES);
 
         $game->initByGameID($request->input('bet.gameCode'));
 

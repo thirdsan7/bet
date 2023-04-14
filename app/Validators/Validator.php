@@ -5,18 +5,8 @@ use Illuminate\Http\Request;
 use App\Libraries\LaravelLib;
 use App\Exceptions\General\InvalidInputException;
 
-class ZirconValidator
+class Validator
 {
-    protected $sellBetRules = [
-        'stake' => 'required',
-        'roundDetID' => 'required',
-        'roundID' => 'required',
-        'gameID' => 'required',
-        'clientID' => 'required',
-        'sessionID' => 'required',
-        'ip' => 'required'
-    ];
-
     protected $lib;
 
     public function __construct(LaravelLib $lib)
@@ -28,11 +18,12 @@ class ZirconValidator
      * validates sell bet reqyest if correct format and data type
      *
      * @param  Request $request
+     * @param  array $rules
      * @return void
      * @throws InvalidInputException
      */
-    public function validateSellBet(Request $request)
+    public function validate(Request $request, array $rules)
     {
-        $this->lib->validate($request, $this->sellBetRules);
+        $this->lib->validate($request, $rules);
     }
 }

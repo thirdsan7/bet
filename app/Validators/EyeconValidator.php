@@ -1,35 +1,13 @@
 <?php
 namespace App\Validators;
 
-use App\Exceptions\General\InvalidInputException;
-use App\Libraries\LaravelLib;
 use Illuminate\Http\Request;
+use App\Libraries\LaravelLib;
+use App\Validators\Validator;
+use App\Exceptions\General\InvalidInputException;
 
-class EyeconValidator
+class EyeconValidator extends Validator
 {
-    const EYECON_REQUEST = [
-        'uid' => 'required',
-        'guid' => 'required',
-        'accessid' => 'required',
-        'type' => 'required',
-        'round' => 'required',
-        'gameid' => 'required',
-        'ref' => 'required',
-        'gtype' => 'required',
-        'cur' => 'required',
-        'status' => 'required',
-        'wager' => 'required',
-        'win' => 'required',
-        'jpwin' => 'required'
-    ];
-
-    private $lib;
-
-    public function __construct(LaravelLib $lib)
-    {
-        $this->lib = $lib;
-    }
-    
     /**
      * validates accessid
      *
@@ -51,9 +29,9 @@ class EyeconValidator
      * @return void
      * @throws InvalidInputException
      */
-    public function validate(Request $request)
+    public function validate(Request $request, array $rules)
     {
-        $this->lib->validate($request, self::EYECON_REQUEST);
+        parent::validate($request, $rules);
 
         $this->validateAccessID($request->accessid);
     }

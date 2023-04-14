@@ -1,21 +1,20 @@
 <?php
 
-use App\Entities\CasinoGame;
+use Tests\TestCase;
 use App\Entities\Player;
 use App\Entities\ZirconBet;
-use App\Http\Controllers\ZirconController;
-use App\Libraries\LaravelLib;
-use App\Responses\ZirconResponse;
+use App\Entities\CasinoGame;
 use App\Services\BetService;
-use App\Validators\ZirconValidator;
 use Illuminate\Http\Request;
-use Tests\TestCase;
+use App\Validators\Validator;
+use App\Responses\ZirconResponse;
+use App\Http\Controllers\ZirconController;
 
 class ZirconControllerTest extends TestCase
 {
     public function makeController($validator = null, $service = null, $response = null)
     {
-        $validator ??= $this->createStub(ZirconValidator::class);
+        $validator ??= $this->createStub(Validator::class);
         $service ??= $this->createStub(BetService::class);
         $response ??= $this->createStub(ZirconResponse::class);
 
@@ -36,10 +35,18 @@ class ZirconControllerTest extends TestCase
         $game = $this->createStub(CasinoGame::class);
         $bet = $this->createStub(ZirconBet::class);
 
-        $mockLib = $this->createMock(ZirconValidator::class);
+        $mockLib = $this->createMock(Validator::class);
         $mockLib->expects($this->once())
-            ->method('validateSellBet')
-            ->with($request);
+            ->method('validate')
+            ->with($request, [
+                'stake' => 'required',
+                'roundDetID' => 'required',
+                'roundID' => 'required',
+                'gameID' => 'required',
+                'clientID' => 'required',
+                'sessionID' => 'required',
+                'ip' => 'required'
+            ]);
 
         $controller = $this->makeController($mockLib);
 

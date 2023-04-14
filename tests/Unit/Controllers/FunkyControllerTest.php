@@ -6,16 +6,15 @@ use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
 use App\Services\BetService;
 use Illuminate\Http\Request;
-use App\Libraries\LaravelLib;
+use App\Validators\Validator;
 use App\Responses\FunkyResponse;
 use App\Http\Controllers\FunkyController;
-use App\Validators\FunkyValidator;
 
 class FunkyControllerTest extends TestCase
 {
     public function makeController($validator = null, $service = null, $response = null)
     {
-        $validator ??= $this->createStub(FunkyValidator::class);
+        $validator ??= $this->createStub(Validator::class);
         $service ??= $this->createStub(BetService::class);
         $response ??= $this->createStub(FunkyResponse::class);
 
@@ -38,10 +37,16 @@ class FunkyControllerTest extends TestCase
         $game = $this->createStub(CasinoGame::class);
         $bet = $this->createStub(ZirconBet::class);
 
-        $mockLib = $this->createMock(FunkyValidator::class);
+        $mockLib = $this->createMock(Validator::class);
         $mockLib->expects($this->once())
-            ->method('validateSellBet')
-            ->with($request);
+            ->method('validate')
+            ->with($request, [
+                'bet.gameCode' => 'required',
+                'bet.refNo' => 'required',
+                'bet.stake' => 'required',
+                'sessionId' => 'required',
+                'playerIp' => 'required'
+            ]);
 
         $controller = $this->makeController($mockLib);
         $controller->placeBet($request, $player, $game, $bet);
