@@ -13,28 +13,17 @@ use Illuminate\Http\JsonResponse;
 use App\Entities\Interfaces\IGame;
 use App\Entities\Interfaces\IPlayer;
 use App\Http\Controllers\Controller;
+use App\Validators\ZirconValidator;
 
 class ZirconController extends Controller
 {
-    
-
-    const SELL_BET_RULES = [
-        'stake' => 'required',
-        'roundDetID' => 'required',
-        'roundID' => 'required',
-        'gameID' => 'required',
-        'clientID' => 'required',
-        'sessionID' => 'required',
-        'ip' => 'required'
-    ];
-
-    private $lib;
+    private $validator;
     private $service;
     private $response;
 
-    public function __construct(LaravelLib $lib, BetService $service, ZirconResponse $response)
+    public function __construct(ZirconValidator $validator, BetService $service, ZirconResponse $response)
     {
-        $this->lib = $lib;
+        $this->validator = $validator;
         $this->service = $service;
         $this->response = $response;
     }
@@ -50,7 +39,7 @@ class ZirconController extends Controller
      */
     public function sellBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet): JsonResponse
     {
-        $this->lib->validate($request, self::SELL_BET_RULES);
+        $this->validator->validateSellBet($request);
 
         $game->initByGameID($request->gameID);
 

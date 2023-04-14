@@ -45,7 +45,7 @@ class EyeconValidator
 
         
     /**
-     * validates request if correct format and validates accessid if correct
+     * validates request if correct format, data type and validates accessid if correct
      *
      * @param  Request $request
      * @return void
