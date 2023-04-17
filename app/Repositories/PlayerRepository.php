@@ -31,4 +31,12 @@ class PlayerRepository
             ->orderBy('getlogininfo.getLoginInfoID', 'desc')
             ->first();
     }
+
+    public function getByClientID(int $clientID)
+    {
+        return $this->model->select('*')
+            ->where('sboClientID', $clientID)
+            ->orderBy('getLoginInfoID', 'desc')
+            ->first();
+    }
 }

@@ -6,7 +6,6 @@ use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
 use App\Services\BetService;
 use Illuminate\Http\Request;
-use App\Libraries\LaravelLib;
 use App\Entities\Interfaces\IBet;
 use App\Responses\ZirconResponse;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +13,6 @@ use App\Entities\Interfaces\IGame;
 use App\Entities\Interfaces\IPlayer;
 use App\Http\Controllers\Controller;
 use App\Validators\Validator;
-use App\Validators\ZirconValidator;
 
 class ZirconController extends Controller
 {
@@ -26,6 +24,14 @@ class ZirconController extends Controller
         'clientID' => 'required',
         'sessionID' => 'required',
         'ip' => 'required'
+    ];
+
+    const RESULT_BET_RULES = [
+        'roundDetID' => 'required',
+        'gameID' => 'required',
+        'clientID' => 'required',
+        'totalWin' => 'required',
+        'turnover' => 'required'
     ];
 
     private $validator;
@@ -61,5 +67,14 @@ class ZirconController extends Controller
         $this->service->startBet($player, $game, $bet);
 
         return $this->response->sellBet($player, $game, $bet);
+    }
+
+    public function resultBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
+    {
+        $this->validator->validate($request, self::RESULT_BET_RULES);
+
+        $game->initByGameID($request->gameID);
+
+        $player->initByClientID($request->clientID);
     }
 }

@@ -91,6 +91,17 @@ class Player implements IPlayer
     }
     
     /**
+     * initialize class by gettind data from DB with given clientID
+     *
+     * @param  mixed $clientID
+     * @return void
+     */
+    public function initByClientID(int $clientID): void
+    {
+        $player = $this->repo->getByClientID($clientID);
+    }
+    
+    /**
      * returns a bool depending on the data isTestPlayer
      *
      * @return bool

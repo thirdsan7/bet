@@ -122,4 +122,21 @@ class PlayerTest extends TestCase
 
         $this->assertTrue($result);
     }
+
+    public function test_initByClientID_mockRepo_getByClientID()
+    {
+        $clientID = 1;
+
+        $mockRepo = $this->createMock(PlayerRepository::class);
+        $mockRepo->expects($this->once())
+            ->method('getByClientID')
+            ->willReturn(LoginInfo::factory()->make([
+                'sessionID' => 1,
+                'loginIP' => 'loginIP',
+                'isTestPlayer' => 1
+            ]));
+
+        $player = $this->makePlayer($mockRepo);
+        $player->initByClientID($clientID);
+    }
 }
