@@ -2,6 +2,7 @@
 
 use App\Entities\Interfaces\IGame;
 use App\Entities\Player;
+use App\Exceptions\General\InvalidInputException;
 use App\Exceptions\Player\PlayerNotLoggedInException;
 use App\Models\LoginInfo;
 use App\Repositories\PlayerRepository;
@@ -137,6 +138,20 @@ class PlayerTest extends TestCase
             ]));
 
         $player = $this->makePlayer($mockRepo);
+        $player->initByClientID($clientID);
+    }
+
+    public function test_initByClientID_stubRepoEmptyPlayer_invalidInputException()
+    {
+        $clientID = 1;
+
+        $this->expectException(InvalidInputException::class);
+
+        $stubRepo = $this->createStub(PlayerRepository::class);
+        $stubRepo->method('getByClientID')
+            ->willReturn(null);
+
+        $player = $this->makePlayer($stubRepo);
         $player->initByClientID($clientID);
     }
 }
