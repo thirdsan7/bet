@@ -37,4 +37,9 @@ class BetService
 
         $player->setBalance($apiData->balance);
     }
+
+    public function settleBet(IPlayer $player, IGame $game, IBet $bet)
+    {
+        
+    }
 }

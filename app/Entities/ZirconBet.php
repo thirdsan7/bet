@@ -14,6 +14,8 @@ class ZirconBet implements IBet
     private $roundDetID;
     private $stake;
     private $ip;
+    private $totalWin;
+    private $turnover;
 
     public function __construct(TransactionRepository $repo)
     {
@@ -102,5 +104,12 @@ class ZirconBet implements IBet
             $this->stake,
             $this->getRefNo($game)
         );
+    }
+
+    public function init(string $roundDetID, float $totalWin, float $turnover)
+    {
+        $this->roundDetID = $roundDetID;
+        $this->totalWin = $totalWin;
+        $this->turnover = $turnover;
     }
 }

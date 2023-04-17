@@ -32,6 +32,11 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
+
+    public function resultBet(IPlayer $player, IGame $game, IBet $bet)
+    {
+
+    }
     
     /**
      * formattez zircon response for invalidInput
