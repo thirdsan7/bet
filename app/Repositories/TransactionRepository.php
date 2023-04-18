@@ -45,4 +45,9 @@ class TransactionRepository implements ITransactionRepository
     {
         
     }
+
+    public function updateByTransactionID(array $updates, int $transactionID): void
+    {
+
+    }
 }

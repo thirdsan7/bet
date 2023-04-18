@@ -10,6 +10,9 @@ use Illuminate\Database\QueryException;
 
 class ZirconBet implements IBet
 {
+    const WIN = 'W';
+    const LOSE = 'L';
+
     private $repo;
 
     private $roundDetID;
@@ -126,8 +129,23 @@ class ZirconBet implements IBet
         $this->transactionID = $transaction->transactionID;
     }
 
+    private function getEvent()
+    {
+        if($this->totalWin > 0)
+            return self::WIN;
+
+        return self::LOSE;
+    }
+
     public function settle(): void
     {
-
+        $this->repo->updateByTransactionID(
+            [
+                'totalWin' => $this->totalWin,
+                'turnover' => $this->turnover,
+                'event' => $this->getEvent()
+            ],
+            $this->transactionID
+        );
     }
 }

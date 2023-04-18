@@ -105,4 +105,62 @@ class ZirconBetTest extends TestCase
         $bet = $this->makeBet($stubRepo);
         $bet->init($player, $game, $roundDetID, $totalWin, $turnover);
     }
+
+    public function test_settle_mockRepoTotalWin0_updateByTransactionID()
+    {
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+        $roundDetID = 'roundDetID';
+        $totalWin = 0;
+        $turnover = 5.0;
+
+        $mockRepo = $this->createMock(TransactionRepository::class);
+        $mockRepo->expects($this->once())
+            ->method('updateByTransactionID')
+            ->with([
+                'totalWin' => 0,
+                'turnover' => 5.0,
+                'event' => 'L'
+            ], 1);
+
+        $mockRepo->method('getBySboClientIDGameIDRoundDetID')
+            ->willReturn(Transaction::factory()->make([
+                'stake' => 10.0,
+                'transactionID' => 1
+            ]));
+
+        $bet = $this->makeBet($mockRepo);
+        $bet->init($player, $game, $roundDetID, $totalWin, $turnover);
+
+        $bet->settle();
+    }
+
+    public function test_settle_mockRepoTotalWin10_updateByTransactionID()
+    {
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+        $roundDetID = 'roundDetID';
+        $totalWin = 10.0;
+        $turnover = 5.0;
+
+        $mockRepo = $this->createMock(TransactionRepository::class);
+        $mockRepo->expects($this->once())
+            ->method('updateByTransactionID')
+            ->with([
+                'totalWin' => 10.0,
+                'turnover' => 5.0,
+                'event' => 'W'
+            ], 1);
+
+        $mockRepo->method('getBySboClientIDGameIDRoundDetID')
+            ->willReturn(Transaction::factory()->make([
+                'stake' => 10.0,
+                'transactionID' => 1
+            ]));
+
+        $bet = $this->makeBet($mockRepo);
+        $bet->init($player, $game, $roundDetID, $totalWin, $turnover);
+
+        $bet->settle();
+    }
 }
