@@ -9,11 +9,11 @@ use Illuminate\Database\QueryException;
 
 class TransactionRepository implements ITransactionRepository
 {
-    private $transaction;
+    private $model;
 
     public function __construct(Transaction $transaction)
     {
-        $this->transaction = $transaction;
+        $this->model = $transaction;
     }
     
     /**
@@ -30,7 +30,7 @@ class TransactionRepository implements ITransactionRepository
      */
     public function create(string $roundDetID, int $sboClientID, string $sessionID, int $gameID, float $stake, string $refNo): void
     {
-        $this->transaction->create([
+        $this->model->create([
             'roundDetID' => $roundDetID,
             'sboClientID' => $sboClientID,
             'sessionID' => $sessionID,
@@ -41,13 +41,19 @@ class TransactionRepository implements ITransactionRepository
         ]);
     }
 
-    public function getBySboClientIDGameIDRoundDetID(int $sboClientID, int $gameID, string $roundDetID): Transaction|null
+    public function getBySboClientIDGameIDRoundDetID(int $clientID, int $gameID, string $roundDetID): Transaction|null
     {
-        
+        return $this->model->select('*')
+            ->where('sboClientID', $clientID)
+            ->where('gameID', $gameID)
+            ->where('roundDetID', $roundDetID)
+            ->first();
     }
 
     public function updateByTransactionID(array $updates, int $transactionID): void
     {
-
+        $this->model
+            ->where('transactionCWID', $transactionID)
+            ->update($updates);
     }
 }
