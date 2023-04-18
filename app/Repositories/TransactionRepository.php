@@ -40,4 +40,9 @@ class TransactionRepository implements ITransactionRepository
             'refNo' => $refNo
         ]);
     }
+
+    public function getBySboClientIDGameIDRoundDetID(int $sboClientID, int $gameID, string $roundDetID): Transaction|null
+    {
+        
+    }
 }

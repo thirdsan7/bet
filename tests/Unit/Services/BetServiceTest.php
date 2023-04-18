@@ -156,4 +156,34 @@ class BetServiceTest extends TestCase
         $service = $this->makeService($mockApi);
         $service->startBet($stubPlayer, $stubGame, $stubBet);
     }
+
+    public function test_settleBet_mockBet_settle()
+    {
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+
+        $mockBet = $this->createMock(IBet::class);
+        $mockBet->expects($this->once())
+            ->method('settle');
+
+        $service = $this->makeService();
+        $service->settleBet($player, $game, $mockBet);
+
+    }
+
+    public function test_settleBet_mockApi_settleBet()
+    {
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+        $bet = $this->createStub(IBet::class);
+
+        $mockApi = $this->createMock(CommonWalletApi::class);
+        $mockApi->expects($this->once())
+            ->method('settleBet')
+            ->with($player, $game, $bet);
+
+        $service = $this->makeService($mockApi);
+        $service->settleBet($player, $game, $bet);
+
+    }
 }

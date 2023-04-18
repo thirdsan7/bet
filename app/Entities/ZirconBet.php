@@ -4,6 +4,7 @@ namespace App\Entities;
 use App\Entities\Interfaces\IBet;
 use App\Entities\Interfaces\IGame;
 use App\Entities\Interfaces\IPlayer;
+use App\Exceptions\Transaction\RoundNotFoundException;
 use App\Repositories\TransactionRepository;
 use Illuminate\Database\QueryException;
 
@@ -16,12 +17,13 @@ class ZirconBet implements IBet
     private $ip;
     private $totalWin;
     private $turnover;
+    private $transactionID;
 
     public function __construct(TransactionRepository $repo)
     {
         $this->repo = $repo;
     }
-        
+
     /**
      * returns roundDetID
      *
@@ -33,7 +35,7 @@ class ZirconBet implements IBet
     {
         return $this->roundDetID;
     }
-    
+
     /**
      * returns ip
      *
@@ -45,7 +47,7 @@ class ZirconBet implements IBet
     {
         return $this->ip;
     }
-    
+
     /**
      * returns stake
      *
@@ -57,7 +59,7 @@ class ZirconBet implements IBet
     {
         return $this->stake;
     }
-    
+
     /**
      * returns formatted refNo based on roundDetID, gameID from given Game and environment id
      *
@@ -66,9 +68,9 @@ class ZirconBet implements IBet
      */
     public function getRefNo(IGame $game): string
     {
-        return "{$this->roundDetID}-{$game->getGameID()}-".config('zircon.ENV_ID');
+        return "{$this->roundDetID}-{$game->getGameID()}-" . config('zircon.ENV_ID');
     }
-    
+
     /**
      * initialize class's bet data
      *
@@ -85,7 +87,7 @@ class ZirconBet implements IBet
         $this->stake = $stake;
         $this->ip = $ip;
     }
-    
+
     /**
      * creates data to the DB via repository
      *
@@ -106,10 +108,26 @@ class ZirconBet implements IBet
         );
     }
 
-    public function init(string $roundDetID, float $totalWin, float $turnover)
+    public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover)
     {
+        $transaction = $this->repo->getBySboClientIDGameIDRoundDetID(
+            $player->getClientID(), 
+            $game->getGameID(),
+            $roundDetID
+        );
+
+        if(empty($transaction)) 
+            throw new RoundNotFoundException;
+
         $this->roundDetID = $roundDetID;
         $this->totalWin = $totalWin;
         $this->turnover = $turnover;
+        $this->stake = $transaction->stake;
+        $this->transactionID = $transaction->transactionID;
+    }
+
+    public function settle(): void
+    {
+
     }
 }

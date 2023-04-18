@@ -12,4 +12,6 @@ interface IBet
     public function getRoundDetID(): string;
     public function new(string $roundDetID, float $stake, string $ip): void;
     public function create(IPlayer $player, IGame $game): void;
+    public function settle(): void;
+    public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover);
 }

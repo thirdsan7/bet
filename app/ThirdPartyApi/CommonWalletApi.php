@@ -60,6 +60,11 @@ class CommonWalletApi implements IMotherApi
 
         $this->validator->validate($this->response);
     }
+
+    public function settleBet(IPlayer $player, IGame $game, IBet $bet): void
+    {
+        
+    }
     
     /**
      * returns response data from api request.

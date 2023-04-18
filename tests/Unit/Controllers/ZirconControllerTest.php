@@ -231,13 +231,13 @@ class ZirconControllerTest extends TestCase
             'turnover' => 5
         ]);
 
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+
         $mockBet = $this->createMock(ZirconBet::class);
         $mockBet->expects($this->once())
             ->method('init')
-            ->with('roundDetID', 10, 5);
-
-        $game = $this->createStub(CasinoGame::class);
-        $player = $this->createStub(Player::class);
+            ->with($player, $game, 'roundDetID', 10, 5);
 
         $controller = $this->makeController();
         $controller->resultBet($request, $player, $game, $mockBet);

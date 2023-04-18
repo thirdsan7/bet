@@ -40,6 +40,8 @@ class BetService
 
     public function settleBet(IPlayer $player, IGame $game, IBet $bet)
     {
-        
+        $bet->settle();
+
+        $this->api->settleBet($player, $game, $bet);
     }
 }

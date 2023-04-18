@@ -32,10 +32,28 @@ const RUNNING_EVENT = 'R';
             ]
         ]);
     }
-
-    public function resultBet(IPlayer $player, IGame $game, IBet $bet)
+    
+    /**
+     * formatted zirocn response for resultBet
+     *
+     * @param  IPlayer $player
+     * @param  IGame $game
+     * @param  IBet $bet
+     * @return JsonResponse
+     */
+    public function resultBet(IPlayer $player, IGame $game, IBet $bet): JsonResponse
     {
-
+        return response()->json([
+            'error' => [
+                'code' => 0,
+                'message' => 'Success'
+            ],
+            'data' => [
+                'roundDetID' => $bet->getRoundDetID(),
+                'gameID' => $game->getGameID(),
+                'balance' => $player->getBalance(),
+            ]
+        ]);
     }
     
     /**

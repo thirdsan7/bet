@@ -77,7 +77,7 @@ class ZirconController extends Controller
 
         $player->initByClientID($request->clientID);
 
-        $bet->init($request->roundDetID, $request->totalWin, $request->turnover);
+        $bet->init($player, $game, $request->roundDetID, $request->totalWin, $request->turnover);
 
         $this->service->settleBet($player, $game, $bet);
 
