@@ -4,6 +4,7 @@ namespace App\Entities;
 use App\Entities\Interfaces\IBet;
 use App\Entities\Interfaces\IGame;
 use App\Entities\Interfaces\IPlayer;
+use App\Exceptions\Transaction\RoundAlreadyExistsException;
 use App\Exceptions\Transaction\RoundNotFoundException;
 use App\Repositories\TransactionRepository;
 use Illuminate\Database\QueryException;
@@ -21,6 +22,9 @@ class ZirconBet implements IBet
     private $totalWin;
     private $turnover;
     private $transactionID;
+    private $gameID;
+    private $sboClientID;
+    private $sessionID;
 
     public function __construct(TransactionRepository $repo)
     {
@@ -69,9 +73,9 @@ class ZirconBet implements IBet
      * @param  IGame $game
      * @return string
      */
-    public function getRefNo(IGame $game): string
+    public function getRefNo(): string
     {
-        return "{$this->roundDetID}-{$game->getGameID()}-" . config('zircon.ENV_ID');
+        return "{$this->roundDetID}-{$this->gameID}-" . config('zircon.ENV_ID');
     }
 
     /**
@@ -84,11 +88,23 @@ class ZirconBet implements IBet
      * 
      * @codeCoverageIgnore
      */
-    public function new(string $roundDetID, float $stake, string $ip): void
+    public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void
     {
+        $transaction = $this->repo->getBySboClientIDGameIDRoundDetID(
+            $player->getClientID(), 
+            $game->getGameID(),
+            $roundDetID
+        );
+
+        if(!empty($transaction)) 
+            throw new RoundAlreadyExistsException;
+
         $this->roundDetID = $roundDetID;
         $this->stake = $stake;
         $this->ip = $ip;
+        $this->gameID = $game->getGameID();
+        $this->sboClientID = $player->getClientID();
+        $this->sessionID = $player->getSessionID();
     }
 
     /**
@@ -99,15 +115,15 @@ class ZirconBet implements IBet
      * @return void
      * @throws QueryException
      */
-    public function create(IPlayer $player, IGame $game): void
+    public function create(): void
     {
         $this->repo->create(
             $this->roundDetID,
-            $player->getClientID(),
-            $player->getSessionID(),
-            $game->getGameID(),
+            $this->sboClientID,
+            $this->sessionID,
+            $this->gameID,
             $this->stake,
-            $this->getRefNo($game)
+            $this->getRefNo()
         );
     }
 
@@ -147,5 +163,29 @@ class ZirconBet implements IBet
             ],
             $this->transactionID
         );
+    }
+    
+    /**
+     * getTotalWin
+     *
+     * @return float
+     * 
+     * @codeCoverageIgnore
+     */
+    public function getTotalWin(): float
+    {
+        return $this->totalWin;
+    }
+    
+    /**
+     * getTurnover
+     *
+     * @return float
+     * 
+     * @codeCoverageIgnore
+     */
+    public function getTurnover(): float
+    {
+        return $this->turnover;
     }
 }

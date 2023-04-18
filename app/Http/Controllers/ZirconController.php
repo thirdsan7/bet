@@ -62,7 +62,7 @@ class ZirconController extends Controller
 
         $player->initBySessionIDGameID($request->sessionID, $game);
         
-        $bet->new($request->roundDetID, $request->stake, $request->ip);
+        $bet->new($player, $game, $request->roundDetID, $request->stake, $request->ip);
         
         $this->service->startBet($player, $game, $bet);
 

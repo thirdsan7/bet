@@ -39,7 +39,7 @@ class FunkyController extends Controller
 
         $player->initBySessionIDGameID($request->sessionId, $game);
         
-        $bet->new($request->input('bet.refNo'), $request->input('bet.stake'), $request->playerIp);
+        $bet->new($player, $game, $request->input('bet.refNo'), $request->input('bet.stake'), $request->playerIp);
     
         $this->service->startBet($player, $game, $bet);
 

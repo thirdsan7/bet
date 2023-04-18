@@ -12,6 +12,8 @@ use App\ThirdPartyApi\Validators\ResponseValidator;
 class CommonWalletApi implements IMotherApi
 {
     const RANDOM_STRING_LENGTH = 15;
+    const PLACE_BET_URI = '/Bet/PlaceBet';
+    const SETTLE_BET_URI = '/Bet/SettleBet';
 
     private $http;
     private $lib;
@@ -23,6 +25,21 @@ class CommonWalletApi implements IMotherApi
         $this->http = $http;
         $this->lib = $lib;
         $this->validator = $validator;
+    }
+
+    private function callApi(array $request, string $uri)
+    {
+        $headers = [
+            'Authentication' => config('zircon.LC_API_TOKEN'),
+            'User-Agent' => config('zircon.LC_API_USER_AGENT'),
+            'X-Request-ID' => $this->lib->randomString(self::RANDOM_STRING_LENGTH),
+        ];
+        
+        $this->response = $this->http->post(
+            config('zircon.LC_API_URL') . '/' . config('zircon.GAME_PROVIDER_NAME') . $uri,
+            $request,
+            $headers
+        );
     }
     
     /**
@@ -36,34 +53,37 @@ class CommonWalletApi implements IMotherApi
     public function placeBet(IPlayer $player, IGame $game, IBet $bet): void
     {
         $request = [
-            'SessionId' => (string) $player->getSessionID(),
+            'SessionId' => $player->getSessionID(),
             'PlayerIp' => (string) $bet->getIp(),
             'PlayerId' => (string) $player->getClientID(),
             'Bet' => [
                 'GameCode' => (string) $game->getGameID(),
                 'Stake' => $bet->getStake(),
-                'TransactionId' => (string) $bet->getRefNo($game),
+                'TransactionId' => $bet->getRefNo(),
             ]
         ];
 
-        $headers = [
-            'Authentication' => config('zircon.LC_API_TOKEN'),
-            'User-Agent' => config('zircon.LC_API_USER_AGENT'),
-            'X-Request-ID' => $this->lib->randomString(self::RANDOM_STRING_LENGTH),
-        ];
-        
-        $this->response = $this->http->post(
-            config('zircon.LC_API_URL') . '/' . config('zircon.GAME_PROVIDER_NAME') . "/Bet/PlaceBet",
-            $request,
-            $headers
-        );
+        $this->callApi($request, self::PLACE_BET_URI);
 
         $this->validator->validate($this->response);
     }
 
     public function settleBet(IPlayer $player, IGame $game, IBet $bet): void
     {
-        
+        $request = [
+            'TransactionId' => $bet->getRefNo(),
+            'BetResultReq' => [
+                'WinAmount' => $bet->getTotalWin(),
+                'Stake' => $bet->getStake(), 
+                'EffectiveStake' => $bet->getTurnover(),
+                'PlayerId' => $player->getClientID(),
+                'GameCode' => $game->getGameID(),
+            ]
+        ];
+
+        $this->callApi($request, self::SETTLE_BET_URI);
+
+        $this->validator->validate($this->response);
     }
     
     /**

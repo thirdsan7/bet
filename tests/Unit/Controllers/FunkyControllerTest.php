@@ -113,14 +113,13 @@ class FunkyControllerTest extends TestCase
             'playerIp' => 'playerIp'
         ]);
 
+        $player = $this->createStub(Player::class);
+        $game = $this->createStub(CasinoGame::class);
+
         $mockBet = $this->createMock(ZirconBet::class);
         $mockBet->expects($this->once())
             ->method('new')
-            ->with('refNo', 10, 'playerIp');
-
-        $player = $this->createStub(Player::class);
-        $game = $this->createStub(CasinoGame::class);
-        
+            ->with($player, $game, 'refNo', 10, 'playerIp');
 
         $controller = $this->makeController();
         $controller->placeBet($request, $player, $game, $mockBet);

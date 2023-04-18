@@ -215,4 +215,9 @@ class CommonWalletApiTest extends TestCase
         $api = $this->makeApi($stubHttp, $stubLib, $mockValidator);
         $api->placeBet($stubPlayer, $stubGame, $stubBet);
     }
+
+    // public function test_settleBet_mockBet_getRefNo()
+    // {
+        
+    // }
 }

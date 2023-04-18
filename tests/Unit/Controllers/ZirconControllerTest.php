@@ -117,7 +117,7 @@ class ZirconControllerTest extends TestCase
         $mockBet = $this->createMock(ZirconBet::class);
         $mockBet->expects($this->once())
             ->method('new')
-            ->with('roundDetID', 10.0, 'testIp');
+            ->with($player, $game, 'roundDetID', 10.0, 'testIp');
         
         $controller = $this->makeController();
 

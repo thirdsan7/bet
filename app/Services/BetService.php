@@ -29,7 +29,7 @@ class BetService
         if($game->isUnderMaintenance() === true && $player->isTestPlayer() === false)  
             throw new SystemUnderMaintenanceException();
 
-        $bet->create($player, $game);
+        $bet->create();
 
         $this->api->placeBet($player, $game, $bet);
 
