@@ -43,5 +43,9 @@ class BetService
         $bet->settle();
 
         $this->api->settleBet($player, $game, $bet);
+
+        $apiData = $this->api->getData();
+
+        $player->setBalance($apiData->balance);
     }
 }

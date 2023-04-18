@@ -166,7 +166,13 @@ class BetServiceTest extends TestCase
         $mockBet->expects($this->once())
             ->method('settle');
 
-        $service = $this->makeService();
+        $stubApi = $this->createStub(CommonWalletApi::class);
+        $stubApi->method('getData')
+            ->willReturn((object)[
+                'balance' => 10.0
+            ]);
+
+        $service = $this->makeService($stubApi);
         $service->settleBet($player, $game, $mockBet);
 
     }
@@ -182,8 +188,49 @@ class BetServiceTest extends TestCase
             ->method('settleBet')
             ->with($player, $game, $bet);
 
+        $mockApi->method('getData')
+            ->willReturn((object)[
+                'balance' => 10.0
+            ]);
+
         $service = $this->makeService($mockApi);
         $service->settleBet($player, $game, $bet);
+    }
 
+    public function test_settleBet_mockApi_getData()
+    {
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+        $bet = $this->createStub(IBet::class);
+
+        $mockApi = $this->createMock(CommonWalletApi::class);
+        $mockApi->expects($this->once())
+            ->method('getData')
+            ->willReturn((object)[
+                'balance' => 10.0
+            ]);
+
+        $service = $this->makeService($mockApi);
+        $service->settleBet($player, $game, $bet);
+    }
+
+    public function test_settleBet_mockPlayer_setBalance()
+    {
+        $mockPlayer = $this->createMock(IPlayer::class);
+        $mockPlayer->expects($this->once())
+            ->method('setBalance')
+            ->with(10.0);
+
+        $game = $this->createStub(IGame::class);
+        $bet = $this->createStub(IBet::class);
+
+        $stubApi = $this->createStub(CommonWalletApi::class);
+        $stubApi->method('getData')
+            ->willReturn((object)[
+                'balance' => 10.0
+            ]);
+
+        $service = $this->makeService($stubApi);
+        $service->settleBet($mockPlayer, $game, $bet);
     }
 }
