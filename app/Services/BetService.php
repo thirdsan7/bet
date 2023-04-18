@@ -31,7 +31,7 @@ class BetService
 
         $bet->create();
 
-        $this->api->placeBet($player, $game, $bet);
+        $this->api->placeBet($bet);
 
         $apiData = $this->api->getData();
 

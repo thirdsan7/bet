@@ -110,7 +110,7 @@ class BetServiceTest extends TestCase
 
     public function test_placeBet_GameInMaintenanceFalseMockApi_placeBet()
     {
-        $stubBet = $this->createStub(IBet::class);
+        $bet = $this->createStub(IBet::class);
 
         $stubGame = $this->createStub(IGame::class);
         $stubGame->method('isUnderMaintenance')
@@ -123,7 +123,7 @@ class BetServiceTest extends TestCase
         $mockApi = $this->createMock(CommonWalletApi::class);
         $mockApi->expects($this->once())
             ->method('placeBet')
-            ->with($stubPlayer, $stubGame, $stubBet);
+            ->with($bet);
 
         $mockApi->method('getData')
             ->willReturn((object)[
@@ -131,7 +131,7 @@ class BetServiceTest extends TestCase
             ]);
 
         $service = $this->makeService($mockApi);
-        $service->startBet($stubPlayer, $stubGame, $stubBet);
+        $service->startBet($stubPlayer, $stubGame, $bet);
     }
 
     public function test_placeBet_GameInMaintenanceFalseMockApi_getData()

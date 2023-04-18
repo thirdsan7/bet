@@ -52,14 +52,14 @@ class CommonWalletApi implements IMotherApi
      * @param  IBet $bet
      * @return void
      */
-    public function placeBet(IPlayer $player, IGame $game, IBet $bet): void
+    public function placeBet(IBet $bet): void
     {
         $request = [
-            'SessionId' => $player->getSessionID(),
+            'SessionId' => $bet->getSessionID(),
             'PlayerIp' => (string) $bet->getIp(),
-            'PlayerId' => (string) $player->getClientID(),
+            'PlayerId' => (string) $bet->getClientID(),
             'Bet' => [
-                'GameCode' => (string) $game->getGameID(),
+                'GameCode' => (string) $bet->getGameID(),
                 'Stake' => $bet->getStake(),
                 'TransactionId' => $bet->getRefNo(),
             ]
