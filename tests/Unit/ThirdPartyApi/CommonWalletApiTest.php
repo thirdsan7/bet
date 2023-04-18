@@ -216,8 +216,55 @@ class CommonWalletApiTest extends TestCase
         $api->placeBet($stubPlayer, $stubGame, $stubBet);
     }
 
-    // public function test_settleBet_mockBet_getRefNo()
-    // {
-        
-    // }
+    public function test_settleBet_mockBet_getRefNo()
+    {
+        $mockBet = $this->createMock(IBet::class);
+        $mockBet->expects($this->once())
+            ->method('getRefNo');
+
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+
+        $api = $this->makeApi();
+        $api->settleBet($player, $game, $mockBet);
+    }
+
+    public function test_settleBet_mockBet_getTotalWin()
+    {
+        $mockBet = $this->createMock(IBet::class);
+        $mockBet->expects($this->once())
+            ->method('getTotalWin');
+
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+
+        $api = $this->makeApi();
+        $api->settleBet($player, $game, $mockBet);
+    }
+
+    public function test_settleBet_mockBet_getStake()
+    {
+        $mockBet = $this->createMock(IBet::class);
+        $mockBet->expects($this->once())
+            ->method('getStake');
+
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+
+        $api = $this->makeApi();
+        $api->settleBet($player, $game, $mockBet);
+    }
+
+    public function test_settleBet_mockBet_getTurnover()
+    {
+        $mockBet = $this->createMock(IBet::class);
+        $mockBet->expects($this->once())
+            ->method('getTurnover');
+
+        $player = $this->createStub(IPlayer::class);
+        $game = $this->createStub(IGame::class);
+
+        $api = $this->makeApi();
+        $api->settleBet($player, $game, $mockBet);
+    }
 }

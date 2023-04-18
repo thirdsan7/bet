@@ -40,6 +40,8 @@ class CommonWalletApi implements IMotherApi
             $request,
             $headers
         );
+
+        $this->validator->validate($this->response);
     }
     
     /**
@@ -64,8 +66,6 @@ class CommonWalletApi implements IMotherApi
         ];
 
         $this->callApi($request, self::PLACE_BET_URI);
-
-        $this->validator->validate($this->response);
     }
 
     public function settleBet(IPlayer $player, IGame $game, IBet $bet): void
@@ -82,8 +82,6 @@ class CommonWalletApi implements IMotherApi
         ];
 
         $this->callApi($request, self::SETTLE_BET_URI);
-
-        $this->validator->validate($this->response);
     }
     
     /**
