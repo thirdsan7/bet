@@ -81,6 +81,6 @@ class ZirconController extends Controller
 
         $this->service->settleBet($player, $bet);
 
-        $this->response->resultBet($player, $bet);
+        return $this->response->resultBet($player, $bet);
     }
 }

@@ -252,7 +252,7 @@ class ZirconBetTest extends TestCase
         $mockRepo->method('getBySboClientIDGameIDRoundDetID')
             ->willReturn(Transaction::factory()->make([
                 'stake' => 10.0,
-                'transactionID' => 1
+                'transactionCWID' => 1
             ]));
 
         $bet = $this->makeBet($mockRepo);
@@ -281,7 +281,7 @@ class ZirconBetTest extends TestCase
         $mockRepo->method('getBySboClientIDGameIDRoundDetID')
             ->willReturn(Transaction::factory()->make([
                 'stake' => 10.0,
-                'transactionID' => 1
+                'transactionCWID' => 1
             ]));
 
         $bet = $this->makeBet($mockRepo);

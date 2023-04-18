@@ -194,7 +194,7 @@ class ZirconBet implements IBet
             $game->getGameID(),
             $roundDetID
         );
-
+        
         if(empty($transaction)) 
             throw new RoundNotFoundException;
 
@@ -202,7 +202,9 @@ class ZirconBet implements IBet
         $this->totalWin = $totalWin;
         $this->turnover = $turnover;
         $this->stake = $transaction->stake;
-        $this->transactionID = $transaction->transactionID;
+        $this->transactionID = $transaction->transactionCWID;
+        $this->sboClientID = $player->getClientID();
+        $this->gameID = $game->getGameID();
     }
 
     private function getEvent()

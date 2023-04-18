@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('refNo', 100)->nullable();
             $table->decimal('stake', 19, 6);
             $table->decimal('totalWin', 19, 6)->default(0);
+            $table->decimal('turnover', 19, 6)->default(0);
             $table->string('event', 1);
             $table->text('remark')->nullable();
             $table->timestamp('timestampStart')->nullable();

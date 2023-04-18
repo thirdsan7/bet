@@ -39,8 +39,8 @@ class ResultBetTest extends TestCase
         $this->json('POST', 'resultbet', $request)
             ->seeJson([
                 'data' => [
-                    'roundDetID' => 10,
-                    'gameID' => 10001,
+                    'roundDetID' => 'running_bet',
+                    'gameID' => 1,
                     'balance' => 1000
                 ]
             ]);

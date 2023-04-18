@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class SellBetSeeder extends Seeder
+class ResultBetSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,6 +16,16 @@ class SellBetSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('getlogininfo')->insert([
+            'valid request' => [
+                'getLoginInfoID' => 1,
+                'sboClientID' => 1,
+                'sessionID' => 1,
+                'loginIP' => 'loginIP',
+                'timestampCreated' => Carbon::now()->format('Y-m-d H:i:s.u')
+            ]
+        ]);
+
         DB::table('transactioncw')->insert([
             'running bet' => [
                 'sboClientID' => 1,
