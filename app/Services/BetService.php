@@ -33,9 +33,9 @@ class BetService
 
         $this->api->placeBet($bet);
 
-        $apiData = $this->api->getData();
+        $apiResponse = $this->api->getResponse();
 
-        $player->setBalance($apiData->balance);
+        $player->setBalance($apiResponse->balance);
     }
 
     public function settleBet(IPlayer $player, IBet $bet)
@@ -44,8 +44,8 @@ class BetService
 
         $this->api->settleBet($bet);
 
-        $apiData = $this->api->getData();
+        $apiResponse = $this->api->getResponse();
 
-        $player->setBalance($apiData->balance);
+        $player->setBalance($apiResponse->balance);
     }
 }

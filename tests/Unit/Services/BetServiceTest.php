@@ -30,7 +30,7 @@ class BetServiceTest extends TestCase
 
         $stubBet = $this->createStub(IBet::class);
         $stubApi = $this->createStub(CommonWalletApi::class);
-        $stubApi->method('getData')
+        $stubApi->method('getResponse')
             ->willReturn((object)[
                 'balance' => 1
             ]);
@@ -52,7 +52,7 @@ class BetServiceTest extends TestCase
 
         $stubBet = $this->createStub(IBet::class);
         $stubApi = $this->createStub(CommonWalletApi::class);
-        $stubApi->method('getData')
+        $stubApi->method('getResponse')
             ->willReturn((object)[
                 'balance' => 1
             ]);
@@ -75,7 +75,7 @@ class BetServiceTest extends TestCase
 
         $stubBet = $this->createStub(IBet::class);
         $stubApi = $this->createStub(CommonWalletApi::class);
-        $stubApi->method('getData')
+        $stubApi->method('getResponse')
             ->willReturn((object)[
                 'balance' => 1
             ]);
@@ -99,7 +99,7 @@ class BetServiceTest extends TestCase
             ->willReturn(true);
         
         $stubApi = $this->createStub(CommonWalletApi::class);
-        $stubApi->method('getData')
+        $stubApi->method('getResponse')
             ->willReturn((object)[
                 'balance' => 1
             ]);
@@ -125,7 +125,7 @@ class BetServiceTest extends TestCase
             ->method('placeBet')
             ->with($bet);
 
-        $mockApi->method('getData')
+        $mockApi->method('getResponse')
             ->willReturn((object)[
                 'balance' => 1
             ]);
@@ -134,7 +134,7 @@ class BetServiceTest extends TestCase
         $service->startBet($stubPlayer, $stubGame, $bet);
     }
 
-    public function test_placeBet_GameInMaintenanceFalseMockApi_getData()
+    public function test_placeBet_GameInMaintenanceFalseMockApi_getResponse()
     {
         $stubBet = $this->createStub(IBet::class);
 
@@ -148,7 +148,7 @@ class BetServiceTest extends TestCase
 
         $mockApi = $this->createMock(CommonWalletApi::class);
         $mockApi->expects($this->once())
-            ->method('getData')
+            ->method('getResponse')
             ->willReturn((object)[
                 'balance' => 1
             ]);
@@ -166,7 +166,7 @@ class BetServiceTest extends TestCase
             ->method('settle');
 
         $stubApi = $this->createStub(CommonWalletApi::class);
-        $stubApi->method('getData')
+        $stubApi->method('getResponse')
             ->willReturn((object)[
                 'balance' => 10.0
             ]);
@@ -186,7 +186,7 @@ class BetServiceTest extends TestCase
             ->method('settleBet')
             ->with($bet);
 
-        $mockApi->method('getData')
+        $mockApi->method('getResponse')
             ->willReturn((object)[
                 'balance' => 10.0
             ]);
@@ -195,14 +195,14 @@ class BetServiceTest extends TestCase
         $service->settleBet($player, $bet);
     }
 
-    public function test_settleBet_mockApi_getData()
+    public function test_settleBet_mockApi_getResponse()
     {
         $player = $this->createStub(IPlayer::class);
         $bet = $this->createStub(IBet::class);
 
         $mockApi = $this->createMock(CommonWalletApi::class);
         $mockApi->expects($this->once())
-            ->method('getData')
+            ->method('getResponse')
             ->willReturn((object)[
                 'balance' => 10.0
             ]);
@@ -221,7 +221,7 @@ class BetServiceTest extends TestCase
         $bet = $this->createStub(IBet::class);
 
         $stubApi = $this->createStub(CommonWalletApi::class);
-        $stubApi->method('getData')
+        $stubApi->method('getResponse')
             ->willReturn((object)[
                 'balance' => 10.0
             ]);

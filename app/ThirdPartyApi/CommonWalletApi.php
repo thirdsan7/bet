@@ -91,7 +91,7 @@ class CommonWalletApi implements IMotherApi
      * 
      * @codeCoverageIgnore
      */
-    public function getData(): object
+    public function getResponse(): object
     {
         $objResponse = json_decode($this->response);
 
