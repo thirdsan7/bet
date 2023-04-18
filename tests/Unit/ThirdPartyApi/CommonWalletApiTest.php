@@ -222,11 +222,8 @@ class CommonWalletApiTest extends TestCase
         $mockBet->expects($this->once())
             ->method('getRefNo');
 
-        $player = $this->createStub(IPlayer::class);
-        $game = $this->createStub(IGame::class);
-
         $api = $this->makeApi();
-        $api->settleBet($player, $game, $mockBet);
+        $api->settleBet($mockBet);
     }
 
     public function test_settleBet_mockBet_getTotalWin()
@@ -235,11 +232,8 @@ class CommonWalletApiTest extends TestCase
         $mockBet->expects($this->once())
             ->method('getTotalWin');
 
-        $player = $this->createStub(IPlayer::class);
-        $game = $this->createStub(IGame::class);
-
         $api = $this->makeApi();
-        $api->settleBet($player, $game, $mockBet);
+        $api->settleBet($mockBet);
     }
 
     public function test_settleBet_mockBet_getStake()
@@ -248,11 +242,8 @@ class CommonWalletApiTest extends TestCase
         $mockBet->expects($this->once())
             ->method('getStake');
 
-        $player = $this->createStub(IPlayer::class);
-        $game = $this->createStub(IGame::class);
-
         $api = $this->makeApi();
-        $api->settleBet($player, $game, $mockBet);
+        $api->settleBet($mockBet);
     }
 
     public function test_settleBet_mockBet_getTurnover()
@@ -261,10 +252,7 @@ class CommonWalletApiTest extends TestCase
         $mockBet->expects($this->once())
             ->method('getTurnover');
 
-        $player = $this->createStub(IPlayer::class);
-        $game = $this->createStub(IGame::class);
-
         $api = $this->makeApi();
-        $api->settleBet($player, $game, $mockBet);
+        $api->settleBet($mockBet);
     }
 }

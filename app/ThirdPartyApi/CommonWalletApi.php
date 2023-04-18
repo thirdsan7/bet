@@ -68,7 +68,7 @@ class CommonWalletApi implements IMotherApi
         $this->callApi($request, self::PLACE_BET_URI);
     }
 
-    public function settleBet(IPlayer $player, IGame $game, IBet $bet): void
+    public function settleBet(IBet $bet): void
     {
         $request = [
             'TransactionId' => $bet->getRefNo(),
@@ -76,8 +76,8 @@ class CommonWalletApi implements IMotherApi
                 'WinAmount' => $bet->getTotalWin(),
                 'Stake' => $bet->getStake(), 
                 'EffectiveStake' => $bet->getTurnover(),
-                'PlayerId' => $player->getClientID(),
-                'GameCode' => $game->getGameID(),
+                'PlayerId' => $bet->getClientID(),
+                'GameCode' => $bet->getGameID(),
             ]
         ];
 

@@ -160,7 +160,6 @@ class BetServiceTest extends TestCase
     public function test_settleBet_mockBet_settle()
     {
         $player = $this->createStub(IPlayer::class);
-        $game = $this->createStub(IGame::class);
 
         $mockBet = $this->createMock(IBet::class);
         $mockBet->expects($this->once())
@@ -173,20 +172,19 @@ class BetServiceTest extends TestCase
             ]);
 
         $service = $this->makeService($stubApi);
-        $service->settleBet($player, $game, $mockBet);
+        $service->settleBet($player, $mockBet);
 
     }
 
     public function test_settleBet_mockApi_settleBet()
     {
         $player = $this->createStub(IPlayer::class);
-        $game = $this->createStub(IGame::class);
         $bet = $this->createStub(IBet::class);
 
         $mockApi = $this->createMock(CommonWalletApi::class);
         $mockApi->expects($this->once())
             ->method('settleBet')
-            ->with($player, $game, $bet);
+            ->with($bet);
 
         $mockApi->method('getData')
             ->willReturn((object)[
@@ -194,13 +192,12 @@ class BetServiceTest extends TestCase
             ]);
 
         $service = $this->makeService($mockApi);
-        $service->settleBet($player, $game, $bet);
+        $service->settleBet($player, $bet);
     }
 
     public function test_settleBet_mockApi_getData()
     {
         $player = $this->createStub(IPlayer::class);
-        $game = $this->createStub(IGame::class);
         $bet = $this->createStub(IBet::class);
 
         $mockApi = $this->createMock(CommonWalletApi::class);
@@ -211,7 +208,7 @@ class BetServiceTest extends TestCase
             ]);
 
         $service = $this->makeService($mockApi);
-        $service->settleBet($player, $game, $bet);
+        $service->settleBet($player, $bet);
     }
 
     public function test_settleBet_mockPlayer_setBalance()
@@ -221,7 +218,6 @@ class BetServiceTest extends TestCase
             ->method('setBalance')
             ->with(10.0);
 
-        $game = $this->createStub(IGame::class);
         $bet = $this->createStub(IBet::class);
 
         $stubApi = $this->createStub(CommonWalletApi::class);
@@ -231,6 +227,6 @@ class BetServiceTest extends TestCase
             ]);
 
         $service = $this->makeService($stubApi);
-        $service->settleBet($mockPlayer, $game, $bet);
+        $service->settleBet($mockPlayer, $bet);
     }
 }

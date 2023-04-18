@@ -66,16 +66,65 @@ class ZirconBet implements IBet
     {
         return $this->stake;
     }
+    
+    /**
+     * getTotalWin
+     *
+     * @return float
+     * 
+     * @codeCoverageIgnore
+     */
+    public function getTotalWin(): float
+    {
+        return $this->totalWin;
+    }
+    
+    /**
+     * getTurnover
+     *
+     * @return float
+     * 
+     * @codeCoverageIgnore
+     */
+    public function getTurnover(): float
+    {
+        return $this->turnover;
+    }
+    
+    /**
+     * getClientID
+     *
+     * @return int
+     * 
+     * @codeCoverageIgnore
+     */
+    public function getClientID(): int
+    {
+        return $this->sboClientID;
+    }
+    
+    /**
+     * getGameID
+     *
+     * @return int
+     * 
+     * @codeCoverageIgnore
+     */
+    public function getGameID(): int
+    {
+        return $this->gameID;
+    }
 
     /**
-     * returns formatted refNo based on roundDetID, gameID from given Game and environment id
+     * getGameID
      *
-     * @param  IGame $game
-     * @return string
+     * @return int
+     * 
+     * @codeCoverageIgnore
      */
-    public function getRefNo(): string
+    public function getSessionID(): string
     {
-        return "{$this->roundDetID}-{$this->gameID}-" . config('zircon.ENV_ID');
+        return $this->sessionID;
     }
 
     /**
@@ -105,6 +154,17 @@ class ZirconBet implements IBet
         $this->gameID = $game->getGameID();
         $this->sboClientID = $player->getClientID();
         $this->sessionID = $player->getSessionID();
+    }
+
+    /**
+     * returns formatted refNo based on roundDetID, gameID from given Game and environment id
+     *
+     * @param  IGame $game
+     * @return string
+     */
+    public function getRefNo(): string
+    {
+        return "{$this->roundDetID}-{$this->gameID}-" . config('zircon.ENV_ID');
     }
 
     /**
@@ -163,29 +223,5 @@ class ZirconBet implements IBet
             ],
             $this->transactionID
         );
-    }
-    
-    /**
-     * getTotalWin
-     *
-     * @return float
-     * 
-     * @codeCoverageIgnore
-     */
-    public function getTotalWin(): float
-    {
-        return $this->totalWin;
-    }
-    
-    /**
-     * getTurnover
-     *
-     * @return float
-     * 
-     * @codeCoverageIgnore
-     */
-    public function getTurnover(): float
-    {
-        return $this->turnover;
     }
 }

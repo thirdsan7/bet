@@ -260,7 +260,7 @@ class ZirconControllerTest extends TestCase
         $mockBet = $this->createMock(BetService::class);
         $mockBet->expects($this->once())
             ->method('settleBet')
-            ->with($player, $game, $bet);
+            ->with($player, $bet);
 
         $controller = $this->makeController(null, $mockBet);
         $controller->resultBet($request, $player, $game, $bet);
