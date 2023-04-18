@@ -66,7 +66,7 @@ class ZirconController extends Controller
         
         $this->service->startBet($player, $game, $bet);
 
-        return $this->response->sellBet($player, $game, $bet);
+        return $this->response->sellBet($player, $bet);
     }
 
     public function resultBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
@@ -81,6 +81,6 @@ class ZirconController extends Controller
 
         $this->service->settleBet($player, $bet);
 
-        $this->response->resultBet($player, $game, $bet);
+        $this->response->resultBet($player, $bet);
     }
 }
