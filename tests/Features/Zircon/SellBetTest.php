@@ -389,7 +389,7 @@ class SellBetTest extends TestCase
             ->seeJson([
                 'error' => [
                     'code' => 104,
-                    'message' => 'TransactionDetID already cancelled'
+                    'message' => 'RoundDetID already cancelled'
                 ]
             ]);
     }
@@ -424,6 +424,7 @@ class SellBetTest extends TestCase
             return
                 $lcRequest->hasHeader('Authentication', env('LC_API_TOKEN')) &&
                 $lcRequest->hasHeader('User-Agent', env('LC_API_USER_AGENT')) &&
+                $lcRequest->hasHeader('X-Request-ID') &&
                 $lcRequest->url() == env('LC_API_URL') . '/' . env('GAME_PROVIDER_NAME') . '/Bet/PlaceBet' &&
                 $lcRequest['Bet']['GameCode'] == 1 &&
                 $lcRequest['Bet']['Stake'] == 100 &&

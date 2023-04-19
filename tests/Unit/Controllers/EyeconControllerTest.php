@@ -171,15 +171,15 @@ class EyeconControllerTest extends TestCase
             'jpwin' => 'jpwin'
         ]);
 
-        $mockBet = $this->createStub(ZirconBet::class);
-        $mockBet->expects($this->once())
-            ->method('new')
-            ->with('round', 10, 'ipAddress');
-
         $game = $this->createStub(CasinoGame::class);
         $player = $this->createStub(Player::class);
         $player->method('getIp')
             ->willReturn('ipAddress');
+
+        $mockBet = $this->createStub(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('new')
+            ->with($player, $game, 'round', 10, 'ipAddress');
 
         $controller = $this->makeController();
         $controller->entry($request, $player, $game, $mockBet);

@@ -29,12 +29,23 @@ class BetService
         if($game->isUnderMaintenance() === true && $player->isTestPlayer() === false)  
             throw new SystemUnderMaintenanceException();
 
-        $bet->create($player, $game);
+        $bet->create();
 
-        $this->api->placeBet($player, $game, $bet);
+        $this->api->placeBet($bet);
 
-        $apiData = $this->api->getData();
+        $apiResponse = $this->api->getResponse();
 
-        $player->setBalance($apiData->balance);
+        $player->setBalance($apiResponse->balance);
+    }
+
+    public function settleBet(IPlayer $player, IBet $bet)
+    {
+        $bet->settle();
+
+        $this->api->settleBet($bet);
+
+        $apiResponse = $this->api->getResponse();
+
+        $player->setBalance($apiResponse->balance);
     }
 }

@@ -7,5 +7,5 @@ use App\Entities\Interfaces\IPlayer;
 
 interface IMotherApi
 {
-    public function placeBet(IPlayer $player, IGame $game, IBet $bet): void;
+    public function placeBet(IBet $bet): void;
 }

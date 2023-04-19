@@ -25,6 +25,7 @@ Route::get('/', function () {
 
 
 Route::post('sellbet', ['uses' => 'ZirconController@sellBet']);
+Route::post('resultbet', ['uses' => 'ZirconController@resultBet']);
 
 Route::get('api/eyecon', ['uses' => 'EyeconController@entry']);
 

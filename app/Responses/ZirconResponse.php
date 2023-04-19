@@ -17,7 +17,7 @@ const RUNNING_EVENT = 'R';
      * @param  IBet $bet
      * @return JsonResponse
      */
-    public function sellBet(IPlayer $player, IGame $game, IBet $bet): JsonResponse
+    public function sellBet(IPlayer $player, IBet $bet): JsonResponse
     {
         return response()->json([
             'error' => [
@@ -26,8 +26,31 @@ const RUNNING_EVENT = 'R';
             ],
             'data' => [
                 'roundDetID' => $bet->getRoundDetID(),
-                'gameID' => $game->getGameID(),
+                'gameID' => $bet->getGameID(),
                 'event' => self::RUNNING_EVENT,
+                'balance' => $player->getBalance(),
+            ]
+        ]);
+    }
+    
+    /**
+     * formatted zirocn response for resultBet
+     *
+     * @param  IPlayer $player
+     * @param  IGame $game
+     * @param  IBet $bet
+     * @return JsonResponse
+     */
+    public function resultBet(IPlayer $player, IBet $bet): JsonResponse
+    {
+        return response()->json([
+            'error' => [
+                'code' => 0,
+                'message' => 'Success'
+            ],
+            'data' => [
+                'roundDetID' => $bet->getRoundDetID(),
+                'gameID' => $bet->getGameID(),
                 'balance' => $player->getBalance(),
             ]
         ]);
@@ -198,7 +221,17 @@ const RUNNING_EVENT = 'R';
         return response()->json([
             'error' => [
                 'code' => 104,
-                'message' => 'TransactionDetID already cancelled'
+                'message' => 'RoundDetID already cancelled'
+            ]
+        ]);
+    }
+
+    public function betNotFound(): JsonResponse
+    {
+        return response()->json([
+            'error' => [
+                'code' => 103,
+                'message' => 'RoundDetID not found'
             ]
         ]);
     }

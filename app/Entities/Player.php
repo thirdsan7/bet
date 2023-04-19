@@ -3,6 +3,7 @@ namespace App\Entities;
 
 use App\Entities\Interfaces\IGame;
 use App\Entities\Interfaces\IPlayer;
+use App\Exceptions\General\InvalidInputException;
 use App\Repositories\PlayerRepository;
 use App\Exceptions\Player\PlayerNotLoggedInException;
 
@@ -88,6 +89,22 @@ class Player implements IPlayer
         $this->sessionID = $player->sessionID;
         $this->ip = $player->loginIP;
         $this->isTestPlayer = $player->isTestPlayer;
+    }
+    
+    /**
+     * initialize class by gettind data from DB with given clientID
+     *
+     * @param  mixed $clientID
+     * @return void
+     */
+    public function initByClientID(int $clientID): void
+    {
+        $player = $this->repo->getByClientID($clientID);
+
+        if(empty($player))
+            throw new InvalidInputException("ClientID not found");
+
+        $this->clientID = $clientID;
     }
     
     /**

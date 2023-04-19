@@ -57,7 +57,7 @@ class EyeconController extends Controller
 
         $player->initBySessionIDGameID($request->guid, $game);
         
-        $bet->new($request->round, $request->wager, $player->getIp());
+        $bet->new($player, $game, $request->round, $request->wager, $player->getIp());
         
         $this->service->startBet($player, $game, $bet);
 

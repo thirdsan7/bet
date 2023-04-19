@@ -6,7 +6,6 @@ use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
 use App\Services\BetService;
 use Illuminate\Http\Request;
-use App\Libraries\LaravelLib;
 use App\Entities\Interfaces\IBet;
 use App\Responses\ZirconResponse;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +13,6 @@ use App\Entities\Interfaces\IGame;
 use App\Entities\Interfaces\IPlayer;
 use App\Http\Controllers\Controller;
 use App\Validators\Validator;
-use App\Validators\ZirconValidator;
 
 class ZirconController extends Controller
 {
@@ -26,6 +24,14 @@ class ZirconController extends Controller
         'clientID' => 'required',
         'sessionID' => 'required',
         'ip' => 'required'
+    ];
+
+    const RESULT_BET_RULES = [
+        'roundDetID' => 'required',
+        'gameID' => 'required',
+        'clientID' => 'required',
+        'totalWin' => 'required',
+        'turnover' => 'required'
     ];
 
     private $validator;
@@ -56,10 +62,25 @@ class ZirconController extends Controller
 
         $player->initBySessionIDGameID($request->sessionID, $game);
         
-        $bet->new($request->roundDetID, $request->stake, $request->ip);
+        $bet->new($player, $game, $request->roundDetID, $request->stake, $request->ip);
         
         $this->service->startBet($player, $game, $bet);
 
-        return $this->response->sellBet($player, $game, $bet);
+        return $this->response->sellBet($player, $bet);
+    }
+
+    public function resultBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
+    {
+        $this->validator->validate($request, self::RESULT_BET_RULES);
+
+        $game->initByGameID($request->gameID);
+
+        $player->initByClientID($request->clientID);
+
+        $bet->init($player, $game, $request->roundDetID, $request->totalWin, $request->turnover);
+
+        $this->service->settleBet($player, $bet);
+
+        return $this->response->resultBet($player, $bet);
     }
 }

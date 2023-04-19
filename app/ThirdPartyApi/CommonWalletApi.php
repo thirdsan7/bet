@@ -12,6 +12,8 @@ use App\ThirdPartyApi\Validators\ResponseValidator;
 class CommonWalletApi implements IMotherApi
 {
     const RANDOM_STRING_LENGTH = 15;
+    const PLACE_BET_URI = '/Bet/PlaceBet';
+    const SETTLE_BET_URI = '/Bet/SettleBet';
 
     private $http;
     private $lib;
@@ -24,6 +26,23 @@ class CommonWalletApi implements IMotherApi
         $this->lib = $lib;
         $this->validator = $validator;
     }
+
+    private function callApi(array $request, string $uri)
+    {
+        $headers = [
+            'Authentication' => config('zircon.LC_API_TOKEN'),
+            'User-Agent' => config('zircon.LC_API_USER_AGENT'),
+            'X-Request-ID' => $this->lib->randomString(self::RANDOM_STRING_LENGTH),
+        ];
+        
+        $this->response = $this->http->post(
+            config('zircon.LC_API_URL') . '/' . config('zircon.GAME_PROVIDER_NAME') . $uri,
+            $request,
+            $headers
+        );
+
+        $this->validator->validate($this->response);
+    }
     
     /**
      * calls CommonWallet API's placeBet
@@ -33,32 +52,36 @@ class CommonWalletApi implements IMotherApi
      * @param  IBet $bet
      * @return void
      */
-    public function placeBet(IPlayer $player, IGame $game, IBet $bet): void
+    public function placeBet(IBet $bet): void
     {
         $request = [
-            'SessionId' => (string) $player->getSessionID(),
+            'SessionId' => $bet->getSessionID(),
             'PlayerIp' => (string) $bet->getIp(),
-            'PlayerId' => (string) $player->getClientID(),
+            'PlayerId' => (string) $bet->getClientID(),
             'Bet' => [
-                'GameCode' => (string) $game->getGameID(),
+                'GameCode' => (string) $bet->getGameID(),
                 'Stake' => $bet->getStake(),
-                'TransactionId' => (string) $bet->getRefNo($game),
+                'TransactionId' => $bet->getRefNo(),
             ]
         ];
 
-        $headers = [
-            'Authentication' => config('zircon.LC_API_TOKEN'),
-            'User-Agent' => config('zircon.LC_API_USER_AGENT'),
-            'X-Request-ID' => $this->lib->randomString(self::RANDOM_STRING_LENGTH),
-        ];
-        
-        $this->response = $this->http->post(
-            config('zircon.LC_API_URL') . '/' . config('zircon.GAME_PROVIDER_NAME') . "/Bet/PlaceBet",
-            $request,
-            $headers
-        );
+        $this->callApi($request, self::PLACE_BET_URI);
+    }
 
-        $this->validator->validate($this->response);
+    public function settleBet(IBet $bet): void
+    {
+        $request = [
+            'TransactionId' => $bet->getRefNo(),
+            'BetResultReq' => [
+                'WinAmount' => $bet->getTotalWin(),
+                'Stake' => $bet->getStake(), 
+                'EffectiveStake' => $bet->getTurnover(),
+                'PlayerId' => $bet->getClientID(),
+                'GameCode' => $bet->getGameID(),
+            ]
+        ];
+
+        $this->callApi($request, self::SETTLE_BET_URI);
     }
     
     /**
@@ -68,7 +91,7 @@ class CommonWalletApi implements IMotherApi
      * 
      * @codeCoverageIgnore
      */
-    public function getData(): object
+    public function getResponse(): object
     {
         $objResponse = json_decode($this->response);
 
