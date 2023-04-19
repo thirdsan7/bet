@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Exceptions\Transaction\RoundAlreadyExistsException;
 use App\Exceptions\Transaction\RoundAlreadySettledException;
 use App\Exceptions\Transaction\RoundAlreadyCancelledException;
+use App\Exceptions\Transaction\RoundNotFoundException;
 
 class Handler extends ExceptionHandler
 {
@@ -126,6 +127,9 @@ class Handler extends ExceptionHandler
         } catch(RoundAlreadyCancelledException $e) {
             
             return $this->response->betAlreadyCancelled();
+        } catch(RoundNotFoundException $e) {
+            
+            return $this->response->betNotFound();
         } catch (\Exception $e) {
             
             return $this->response->somethingWentWrong($e->getMessage());

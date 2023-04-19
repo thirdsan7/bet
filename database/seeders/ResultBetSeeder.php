@@ -37,6 +37,28 @@ class ResultBetSeeder extends Seeder
                 'event' => 'R',
                 'timestampStart' => Carbon::now()->format('Y-m-d H:i:s.u'),
                 'timestampEnd' => Carbon::now()->format('Y-m-d H:i:s.u'),
+            ],
+            'third party error' => [
+                'sboClientID' => 1,
+                'roundDetID' => 'third_party_error',
+                'gameID' => 1,
+                'sessionID' => 1,
+                'refNo' => 1,
+                'stake' => 100,
+                'event' => 'R',
+                'timestampStart' => Carbon::now()->format('Y-m-d H:i:s.u'),
+                'timestampEnd' => Carbon::now()->format('Y-m-d H:i:s.u'),
+            ],
+            'mock CW API' => [
+                'sboClientID' => 1,
+                'roundDetID' => 'roundDetID_mockCWAPI',
+                'gameID' => 1,
+                'sessionID' => 1,
+                'refNo' => 1,
+                'stake' => 100,
+                'event' => 'R',
+                'timestampStart' => Carbon::now()->format('Y-m-d H:i:s.u'),
+                'timestampEnd' => Carbon::now()->format('Y-m-d H:i:s.u'),
             ]
         ]);
     }

@@ -221,7 +221,17 @@ const RUNNING_EVENT = 'R';
         return response()->json([
             'error' => [
                 'code' => 104,
-                'message' => 'TransactionDetID already cancelled'
+                'message' => 'RoundDetID already cancelled'
+            ]
+        ]);
+    }
+
+    public function betNotFound(): JsonResponse
+    {
+        return response()->json([
+            'error' => [
+                'code' => 103,
+                'message' => 'RoundDetID not found'
             ]
         ]);
     }
