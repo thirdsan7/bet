@@ -19,6 +19,14 @@ class FunkyController extends Controller
         'sessionId' => 'required',
         'playerIp' => 'required'
     ];
+    const SETTLE_BET_RULES = [
+        'refNo' => 'required',
+        'betResultReq.winAmount' => 'required',
+        'betResultReq.stake' => 'required',
+        'betResultReq.effectiveStake' => 'required',
+        'betResultReq.playerId' => 'required',
+        'betResultReq.gameCode' => 'required'
+    ];
     private $validator;
     private $service;
     private $response;
@@ -44,5 +52,26 @@ class FunkyController extends Controller
         $this->service->startBet($player, $game, $bet);
 
         return $this->response->placeBet($player);
+    }
+
+    public function settleBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet)
+    {
+        $this->validator->validate($request, self::SETTLE_BET_RULES);
+
+        $game->initByGameID($request->input('betResultReq.gameCode'));
+
+        $player->initByClientID($request->input('betResultReq.playerId'));
+
+        $bet->init(
+            $player,
+            $game,
+            $request->refNo,
+            $request->input('betResultReq.winAmount'),
+            $request->input('betResultReq.effectiveStake')
+        );
+
+        $this->service->settleBet($player, $bet);
+
+        $this->response->settleBet($player, $bet);
     }
 }

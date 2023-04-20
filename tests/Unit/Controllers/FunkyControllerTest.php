@@ -174,4 +174,133 @@ class FunkyControllerTest extends TestCase
         $controller = $this->makeController(null, null, $mockResponse);
         $controller->placeBet($request, $player, $game, $bet);
     }
+
+    public function test_settleBet_mockValidator_validate()
+    {
+        $request = new Request([
+            'betResultReq' => [
+                'gameCode' => 1,
+                'playerId' => 2,
+                'winAmount' => 10.0,
+                'effectiveStake' => 5.0
+            ],
+            'refNo' => 'refNo'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $mockValidator = $this->createMock(Validator::class);
+        $mockValidator->expects($this->once())
+            ->method('validate')
+            ->with($request, [
+                'refNo' => 'required',
+                'betResultReq.winAmount' => 'required',
+                'betResultReq.stake' => 'required',
+                'betResultReq.effectiveStake' => 'required',
+                'betResultReq.playerId' => 'required',
+                'betResultReq.gameCode' => 'required'
+            ]);
+
+        $controller = $this->makeController($mockValidator);
+        $controller->settleBet($request, $game, $player, $bet);
+    }
+
+    public function test_settleBet_mockGame_initByGameID()
+    {
+        $request = new Request([
+            'betResultReq' => [
+                'gameCode' => 1,
+                'playerId' => 2,
+                'winAmount' => 10.0,
+                'effectiveStake' => 5.0
+            ],
+            'refNo' => 'refNo'
+        ]);
+
+        $mockGame = $this->createMock(CasinoGame::class);
+        $mockGame->expects($this->once())
+            ->method('initByGameID')
+            ->with(1);
+
+        $player = $this->createStub(Player::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $controller = $this->makeController();
+        $controller->settleBet($request, $mockGame, $player, $bet);
+    }
+
+    public function test_settleBet_mockPlayer_initByClientID()
+    {
+        $request = new Request([
+            'betResultReq' => [
+                'gameCode' => 1,
+                'playerId' => 2,
+                'winAmount' => 10.0,
+                'effectiveStake' => 5.0
+            ],
+            'refNo' => 'refNo'
+        ]);
+
+        $mockPlayer = $this->createMock(Player::class);
+        $mockPlayer->expects($this->once())
+            ->method('initByClientID')
+            ->with(2);
+
+        $game = $this->createStub(CasinoGame::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $controller = $this->makeController();
+        $controller->settleBet($request, $game, $mockPlayer, $bet);
+    }
+
+    public function test_settleBet_mockBet_init()
+    {
+        $request = new Request([
+            'betResultReq' => [
+                'gameCode' => 1,
+                'playerId' => 2,
+                'winAmount' => 10.0,
+                'effectiveStake' => 5.0
+            ],
+            'refNo' => 'refNo'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('init')
+            ->with($player, $game, 'refNo', 10.0, 5.0);
+
+        $controller = $this->makeController();
+        $controller->settleBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_settleBet_mockResponse_settleBet()
+    {
+        $request = new Request([
+            'betResultReq' => [
+                'gameCode' => 1,
+                'playerId' => 2,
+                'winAmount' => 10.0,
+                'effectiveStake' => 5.0
+            ],
+            'refNo' => 'refNo'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $mockResponse = $this->createMock(FunkyResponse::class);
+        $mockResponse->expects($this->once())
+            ->method('settleBet')
+            ->with($player, $bet);
+
+        $controller = $this->makeController(null, null, $mockResponse);
+        $controller->settleBet($request, $game, $player, $bet);
+    }
 }

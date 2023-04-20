@@ -1,6 +1,7 @@
 <?php
 namespace App\Responses;
 
+use App\Entities\Interfaces\IBet;
 use Illuminate\Http\JsonResponse;
 use App\Entities\Interfaces\IPlayer;
 use Illuminate\Http\Response;
@@ -22,6 +23,11 @@ class FunkyResponse
                 'balance' => $player->getBalance()
             ]
         ]);
+    }
+
+    public function settleBet(IPlayer $player, IBet $bet)
+    {
+        
     }
     
     /**
