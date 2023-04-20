@@ -37,8 +37,15 @@ class BetService
 
         $player->setBalance($apiResponse->balance);
     }
-
-    public function settleBet(IPlayer $player, IBet $bet)
+    
+    /**
+     * settles the bet via given details.
+     *
+     * @param  IPlayer $player
+     * @param  IBet $bet
+     * @return void
+     */
+    public function settleBet(IPlayer $player, IBet $bet): void
     {
         $bet->settle();
 
@@ -47,5 +54,6 @@ class BetService
         $apiResponse = $this->api->getResponse();
 
         $player->setBalance($apiResponse->balance);
+        $bet->setStatementDate($apiResponse->statementDate);
     }
 }

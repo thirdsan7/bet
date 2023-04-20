@@ -1,6 +1,7 @@
 <?php
 namespace App\Responses;
 
+use App\Entities\Interfaces\IBet;
 use Illuminate\Http\JsonResponse;
 use App\Entities\Interfaces\IPlayer;
 use Illuminate\Http\Response;
@@ -20,6 +21,28 @@ class FunkyResponse
             'errorMessage' => 'NoError',
             'data' => [
                 'balance' => $player->getBalance()
+            ]
+        ]);
+    }
+    
+    /**
+     * formatted funky response for settleBet
+     *
+     * @param  IPlayer $player
+     * @param  IBet $bet
+     * @return JsonResponse
+     */
+    public function settleBet(IPlayer $player, IBet $bet): JsonResponse
+    {
+        return response()->json([
+            'errorCode' => 0,
+            'errorMessage' => 'NoError',
+            'data' => [
+                'refNo' => $bet->getRoundDetID(),
+                'balance' => $player->getBalance(),
+                'playerId' => $bet->getClientID(),
+                'currency' => "",
+                'statementDate' => $bet->getStatementDate()
             ]
         ]);
     }

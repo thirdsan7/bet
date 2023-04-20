@@ -26,8 +26,15 @@ class CommonWalletApi implements IMotherApi
         $this->lib = $lib;
         $this->validator = $validator;
     }
-
-    private function callApi(array $request, string $uri)
+    
+    /**
+     * calls the API with headers, request and given URI
+     *
+     * @param  array $request
+     * @param  string $uri
+     * @return void
+     */
+    private function callApi(array $request, string $uri): void
     {
         $headers = [
             'Authentication' => config('zircon.LC_API_TOKEN'),
@@ -47,8 +54,6 @@ class CommonWalletApi implements IMotherApi
     /**
      * calls CommonWallet API's placeBet
      *
-     * @param  IPlayer $player
-     * @param  IGame $game
      * @param  IBet $bet
      * @return void
      */
@@ -67,7 +72,13 @@ class CommonWalletApi implements IMotherApi
 
         $this->callApi($request, self::PLACE_BET_URI);
     }
-
+    
+    /**
+     * calls CommonWallet API's settleBet
+     *
+     * @param  IBet $bet
+     * @return void
+     */
     public function settleBet(IBet $bet): void
     {
         $request = [

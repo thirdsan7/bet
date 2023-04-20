@@ -46,12 +46,12 @@ class ZirconController extends Controller
     }
         
     /**
-     * Zircon API sellBet which starts the bet of a player.
+     * Zircon API sellBet to start the bet of a player.
      *
      * @param  Request $request
-     * @param  IPlayer $player
-     * @param  IGame $game
-     * @param  IBet $bet
+     * @param  Player $player
+     * @param  CasinoGame $game
+     * @param  ZirconBet $bet
      * @return JsonResponse
      */
     public function sellBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet): JsonResponse
@@ -68,7 +68,16 @@ class ZirconController extends Controller
 
         return $this->response->sellBet($player, $bet);
     }
-
+    
+    /**
+     * Zircon API resultBet to settle the bet of a player
+     *
+     * @param  Request $request
+     * @param  Player $player
+     * @param  CasinoGame $game
+     * @param  ZirconBet $bet
+     * @return JsonResponse
+     */
     public function resultBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
     {
         $this->validator->validate($request, self::RESULT_BET_RULES);

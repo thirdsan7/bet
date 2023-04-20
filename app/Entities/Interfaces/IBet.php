@@ -15,6 +15,8 @@ interface IBet
     public function getGameID(): int;
     public function getSessionID(): string;
     public function getRefNo(): string;
+    public function setStatementDate(string $statementDate): void;
+    public function getStatementDate(): string;
     
     public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void;
     public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover);

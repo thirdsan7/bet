@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Responses\FunkyResponse;
 use App\Validators\FunkyValidator;
 use App\Validators\Validator;
+use Illuminate\Http\JsonResponse;
 
 class FunkyController extends Controller
 {
@@ -18,6 +19,14 @@ class FunkyController extends Controller
         'bet.stake' => 'required',
         'sessionId' => 'required',
         'playerIp' => 'required'
+    ];
+    const SETTLE_BET_RULES = [
+        'refNo' => 'required',
+        'betResultReq.winAmount' => 'required',
+        'betResultReq.stake' => 'required',
+        'betResultReq.effectiveStake' => 'required',
+        'betResultReq.playerId' => 'required',
+        'betResultReq.gameCode' => 'required'
     ];
     private $validator;
     private $service;
@@ -30,7 +39,16 @@ class FunkyController extends Controller
         $this->service = $service;
         $this->response = $response;
     }
-
+    
+    /**
+     * funky's api function to start a bet
+     *
+     * @param  Request $request
+     * @param  Player $player
+     * @param  CasinoGame $game
+     * @param  ZirconBet $bet
+     * @return JsonResponse
+     */
     public function placeBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
     {
         $this->validator->validate($request, self::PLACE_BET_RULES);
@@ -44,5 +62,35 @@ class FunkyController extends Controller
         $this->service->startBet($player, $game, $bet);
 
         return $this->response->placeBet($player);
+    }
+    
+    /**
+     * funky's api function to settle a bet
+     *
+     * @param  Request $request
+     * @param  Player $player
+     * @param  CasinoGame $game
+     * @param  ZirconBet $bet
+     * @return JsonResponse
+     */
+    public function settleBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet)
+    {
+        $this->validator->validate($request, self::SETTLE_BET_RULES);
+
+        $game->initByGameID($request->input('betResultReq.gameCode'));
+
+        $player->initByClientID($request->input('betResultReq.playerId'));
+
+        $bet->init(
+            $player,
+            $game,
+            $request->refNo,
+            $request->input('betResultReq.winAmount'),
+            $request->input('betResultReq.effectiveStake')
+        );
+
+        $this->service->settleBet($player, $bet);
+
+        return $this->response->settleBet($player, $bet);
     }
 }
