@@ -24,10 +24,27 @@ class FunkyResponse
             ]
         ]);
     }
-
-    public function settleBet(IPlayer $player, IBet $bet)
+    
+    /**
+     * formatted funky response for settleBet
+     *
+     * @param  IPlayer $player
+     * @param  IBet $bet
+     * @return JsonResponse
+     */
+    public function settleBet(IPlayer $player, IBet $bet): JsonResponse
     {
-        
+        return response()->json([
+            'errorCode' => 0,
+            'errorMessage' => 'NoError',
+            'data' => [
+                'refNo' => $bet->getRoundDetID(),
+                'balance' => $player->getBalance(),
+                'playerId' => $bet->getClientID(),
+                'currency' => "",
+                'statementDate' => $bet->getStatementDate()
+            ]
+        ]);
     }
     
     /**
