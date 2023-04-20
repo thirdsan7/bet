@@ -168,7 +168,8 @@ class BetServiceTest extends TestCase
         $stubApi = $this->createStub(CommonWalletApi::class);
         $stubApi->method('getResponse')
             ->willReturn((object)[
-                'balance' => 10.0
+                'balance' => 10.0,
+                'statementDate' => 'statementDate'
             ]);
 
         $service = $this->makeService($stubApi);
@@ -188,7 +189,8 @@ class BetServiceTest extends TestCase
 
         $mockApi->method('getResponse')
             ->willReturn((object)[
-                'balance' => 10.0
+                'balance' => 10.0,
+                'statementDate' => 'statementDate'
             ]);
 
         $service = $this->makeService($mockApi);
@@ -204,7 +206,8 @@ class BetServiceTest extends TestCase
         $mockApi->expects($this->once())
             ->method('getResponse')
             ->willReturn((object)[
-                'balance' => 10.0
+                'balance' => 10.0,
+                'statementDate' => 'statementDate'
             ]);
 
         $service = $this->makeService($mockApi);
@@ -223,10 +226,31 @@ class BetServiceTest extends TestCase
         $stubApi = $this->createStub(CommonWalletApi::class);
         $stubApi->method('getResponse')
             ->willReturn((object)[
-                'balance' => 10.0
+                'balance' => 10.0,
+                'statementDate' => 'statementDate'
             ]);
 
         $service = $this->makeService($stubApi);
         $service->settleBet($mockPlayer, $bet);
+    }
+
+    public function test_settleBet_mockBet_setStatementDate()
+    {
+        $mockBet = $this->createMock(IBet::class);
+        $mockBet->expects($this->once())
+            ->method('setStatementDate')
+            ->with('statementDate');
+
+        $player = $this->createStub(IPlayer::class);
+
+        $stubApi = $this->createStub(CommonWalletApi::class);
+        $stubApi->method('getResponse')
+            ->willReturn((object)[
+                'balance' => 10.0,
+                'statementDate' => 'statementDate'
+            ]);
+
+        $service = $this->makeService($stubApi);
+        $service->settleBet($player, $mockBet);
     }
 }

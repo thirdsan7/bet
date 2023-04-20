@@ -25,6 +25,7 @@ class ZirconBet implements IBet
     private $gameID;
     private $sboClientID;
     private $sessionID;
+    private $statementDate;
 
     public function __construct(TransactionRepository $repo)
     {
@@ -126,6 +127,31 @@ class ZirconBet implements IBet
     {
         return $this->sessionID;
     }
+    
+    /**
+     * sets statementDate
+     *
+     * @param  string $statementDate
+     * @return void
+     * 
+     * @codeCoverageIgnore
+     */
+    public function setStatementDate(string $statementDate): void
+    {
+        $this->statementDate = $statementDate;
+    }
+    
+    /**
+     * returns statementDate
+     *
+     * @return string
+     * 
+     * @codeCoverageIgnore
+     */
+    public function getStatementDate(): string
+    {
+        return $this->statementDate;
+    }
 
     /**
      * initialize class's bet data
@@ -135,7 +161,6 @@ class ZirconBet implements IBet
      * @param  string $ip
      * @return void
      * 
-     * @codeCoverageIgnore
      */
     public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void
     {
@@ -186,8 +211,18 @@ class ZirconBet implements IBet
             $this->getRefNo()
         );
     }
-
-    public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover)
+    
+    /**
+     * initialize bet class via getting data from DB
+     *
+     * @param  IPlayer $player
+     * @param  IGame $game
+     * @param  string $roundDetID
+     * @param  float $totalWin
+     * @param  float $turnover
+     * @return void
+     */
+    public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover): void
     {
         $transaction = $this->repo->getBySboClientIDGameIDRoundDetID(
             $player->getClientID(), 
@@ -206,15 +241,25 @@ class ZirconBet implements IBet
         $this->sboClientID = $player->getClientID();
         $this->gameID = $game->getGameID();
     }
-
-    private function getEvent()
+    
+    /**
+     * returns corresponding event based on totalWin
+     *
+     * @return string
+     */
+    private function getEvent(): string
     {
         if($this->totalWin > 0)
             return self::WIN;
 
         return self::LOSE;
     }
-
+    
+    /**
+     * updates DB's totalWin, turnover and event.
+     *
+     * @return void
+     */
     public function settle(): void
     {
         $this->repo->updateByTransactionID(

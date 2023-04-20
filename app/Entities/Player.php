@@ -94,7 +94,7 @@ class Player implements IPlayer
     /**
      * initialize class by gettind data from DB with given clientID
      *
-     * @param  mixed $clientID
+     * @param  int $clientID
      * @return void
      */
     public function initByClientID(int $clientID): void

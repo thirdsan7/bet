@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Responses\FunkyResponse;
 use App\Validators\FunkyValidator;
 use App\Validators\Validator;
+use Illuminate\Http\JsonResponse;
 
 class FunkyController extends Controller
 {
@@ -38,7 +39,16 @@ class FunkyController extends Controller
         $this->service = $service;
         $this->response = $response;
     }
-
+    
+    /**
+     * funky's api function to start a bet
+     *
+     * @param  Request $request
+     * @param  Player $player
+     * @param  CasinoGame $game
+     * @param  ZirconBet $bet
+     * @return JsonResponse
+     */
     public function placeBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
     {
         $this->validator->validate($request, self::PLACE_BET_RULES);
@@ -53,7 +63,16 @@ class FunkyController extends Controller
 
         return $this->response->placeBet($player);
     }
-
+    
+    /**
+     * funky's api function to settle a bet
+     *
+     * @param  Request $request
+     * @param  Player $player
+     * @param  CasinoGame $game
+     * @param  ZirconBet $bet
+     * @return JsonResponse
+     */
     public function settleBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet)
     {
         $this->validator->validate($request, self::SETTLE_BET_RULES);
@@ -72,6 +91,6 @@ class FunkyController extends Controller
 
         $this->service->settleBet($player, $bet);
 
-        $this->response->settleBet($player, $bet);
+        return $this->response->settleBet($player, $bet);
     }
 }
