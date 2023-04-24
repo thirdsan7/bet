@@ -3,9 +3,6 @@
 namespace App\Exceptions;
 
 use Throwable;
-use App\Responses\FunkyResponse;
-use App\Responses\EyeconResponse;
-use App\Responses\ZirconResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use App\Exceptions\Player\BetLimitException;
@@ -15,7 +12,11 @@ use App\Exceptions\General\InvalidInputException;
 use Illuminate\Auth\Access\AuthorizationException;
 use App\Exceptions\Player\MaxWinningLimitException;
 use App\Exceptions\Player\BalanceNotEnoughException;
+use App\Responses\ErrorResponses\FunkyErrorResponse;
 use App\Exceptions\Player\PlayerNotLoggedInException;
+use App\Responses\ErrorResponses\EyeconErrorResponse;
+use App\Responses\ErrorResponses\ZirconErrorResponse;
+use App\Exceptions\Transaction\RoundNotFoundException;
 use App\Exceptions\Game\SystemUnderMaintenanceException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
@@ -23,7 +24,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Exceptions\Transaction\RoundAlreadyExistsException;
 use App\Exceptions\Transaction\RoundAlreadySettledException;
 use App\Exceptions\Transaction\RoundAlreadyCancelledException;
-use App\Exceptions\Transaction\RoundNotFoundException;
 
 class Handler extends ExceptionHandler
 {
@@ -45,8 +45,11 @@ class Handler extends ExceptionHandler
     private $eyeconResponse;
     private $response;
 
-    public function __construct(ZirconResponse $zirconResponse, FunkyResponse $funkyResponse, EyeconResponse $eyeconResponse)
-    {
+    public function __construct(
+        ZirconErrorResponse $zirconResponse,
+        FunkyErrorResponse $funkyResponse, 
+        EyeconErrorResponse $eyeconResponse
+    ) {
         $this->zirconResponse = $zirconResponse;
         $this->funkyResponse = $funkyResponse;
         $this->eyeconResponse = $eyeconResponse;
@@ -81,7 +84,7 @@ class Handler extends ExceptionHandler
         try {
             DB::rollBack();
 
-            if($request->is('Funky/*'))
+            if ($request->is('Funky/*'))
                 $this->response = $this->funkyResponse;
             elseif ($request->is('api/eyecon'))
                 $this->response = $this->eyeconResponse;
@@ -89,28 +92,28 @@ class Handler extends ExceptionHandler
                 $this->response = $this->zirconResponse;
 
             throw $exception;
-        } catch(InvalidInputException $e) {
+        } catch (InvalidInputException $e) {
 
             return $this->response->invalidInput($e->getMessage());
-        } catch(GameIDNotFoundException $e) {
-            
+        } catch (GameIDNotFoundException $e) {
+
             return $this->response->invalidGameID();
-        } catch(PlayerNotLoggedInException $e) {
-            
+        } catch (PlayerNotLoggedInException $e) {
+
             return $this->response->playerNotLoggedIn();
-        } catch(SystemUnderMaintenanceException $e) {
-            
+        } catch (SystemUnderMaintenanceException $e) {
+
             return $this->response->systemUnderMaintenance();
-        } catch(QueryException $e) {
-            
-            if($e->errorInfo[1] === self::DUPLICATE_ENTRY) {
+        } catch (QueryException $e) {
+
+            if ($e->errorInfo[1] === self::DUPLICATE_ENTRY) {
                 return $this->response->betAlreadyExists();
-            } else {    
+            } else {
                 return $this->response->somethingWentWrong($e->getMessage());
             }
-            
+
         } catch (BalanceNotEnoughException $e) {
-            
+
             return $this->response->balanceNotEnough();
         } catch (RoundAlreadyExistsException $e) {
 
@@ -121,20 +124,20 @@ class Handler extends ExceptionHandler
         } catch (BetLimitException $e) {
 
             return $this->response->betLimitExceed();
-        } catch(RoundAlreadySettledException $e) {
-            
+        } catch (RoundAlreadySettledException $e) {
+
             return $this->response->betAlreadySettled();
-        } catch(RoundAlreadyCancelledException $e) {
-            
+        } catch (RoundAlreadyCancelledException $e) {
+
             return $this->response->betAlreadyCancelled();
-        } catch(RoundNotFoundException $e) {
-            
+        } catch (RoundNotFoundException $e) {
+
             return $this->response->betNotFound();
         } catch (\Exception $e) {
-            
+
             return $this->response->somethingWentWrong($e->getMessage());
         }
-        
+
         // return parent::render($request, $exception);
     }
 }

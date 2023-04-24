@@ -8,17 +8,20 @@ class SettleBetTest extends TestCase
     {
         exec('php artisan migrate:fresh');
         exec('php artisan db:seed');
-        exec('php artisan db:seed --class=SellBetSeeder');
+        exec('php artisan db:seed --class=ResultBetSeeder');
     }
 
     public function test_resultBet_validData_expectedResponse()
     {
         $request = [
-            'roundDetID' => 'running_bet',
-            'gameID' => 1,
-            'clientID' => 1,
-            'totalWin' => 100,
-            'turnover' => 100
+            'refNo' => 'running_bet',
+            'betResultReq' => [
+                'gameCode' => 1,
+                'playerId' => 1,
+                'winAmount' => 100,
+                'effectiveStake' => 50,
+                'stake' => 100
+            ]
         ];
 
         $lcApiResponse = json_encode([
@@ -45,7 +48,11 @@ class SettleBetTest extends TestCase
                 'errorCode' => 0,
                 'errorMessage' => 'NoError',    
                 'data' => [
-                    'balance' => 1000
+                    'refNo' => 'running_bet',
+                    'balance' => 1000,
+                    'playerId' => 1,
+                    'currency' => '',
+                    'statementDate' => 'StatementDate'
                 ]
             ]);
     }
