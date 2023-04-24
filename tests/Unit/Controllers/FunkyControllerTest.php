@@ -6,15 +6,15 @@ use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
 use App\Services\BetService;
 use Illuminate\Http\Request;
-use App\Validators\Validator;
 use App\Responses\FunkyResponse;
+use App\Validators\FunkyValidator;
 use App\Http\Controllers\FunkyController;
 
 class FunkyControllerTest extends TestCase
 {
     public function makeController($validator = null, $service = null, $response = null)
     {
-        $validator ??= $this->createStub(Validator::class);
+        $validator ??= $this->createStub(FunkyValidator::class);
         $service ??= $this->createStub(BetService::class);
         $response ??= $this->createStub(FunkyResponse::class);
 
@@ -37,7 +37,7 @@ class FunkyControllerTest extends TestCase
         $game = $this->createStub(CasinoGame::class);
         $bet = $this->createStub(ZirconBet::class);
 
-        $mockLib = $this->createMock(Validator::class);
+        $mockLib = $this->createMock(FunkyValidator::class);
         $mockLib->expects($this->once())
             ->method('validate')
             ->with($request, [
@@ -191,7 +191,7 @@ class FunkyControllerTest extends TestCase
         $player = $this->createStub(Player::class);
         $bet = $this->createStub(ZirconBet::class);
 
-        $mockValidator = $this->createMock(Validator::class);
+        $mockValidator = $this->createMock(FunkyValidator::class);
         $mockValidator->expects($this->once())
             ->method('validate')
             ->with($request, [
