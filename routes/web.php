@@ -29,7 +29,7 @@ Route::post('resultbet', ['uses' => 'ZirconController@resultBet']);
 
 Route::get('api/eyecon', ['uses' => 'EyeconController@entry']);
 
-Route::group(['middleware' => FunkyAuthenticationToken::class, 'prefix' => 'Funky'], function (){
+Route::group(['prefix' => 'Funky'], function (){
     Route::post('Bet/PlaceBet', ['uses' => 'FunkyController@placeBet']);
     Route::post('Bet/SettleBet', ['uses' => 'FunkyController@settleBet']);
 });

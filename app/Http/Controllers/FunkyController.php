@@ -33,7 +33,7 @@ class FunkyController extends Controller
     private $response;
 
 
-    public function __construct(Validator $validator, BetService $service, FunkyResponse $response)
+    public function __construct(FunkyValidator $validator, BetService $service, FunkyResponse $response)
     {
         $this->validator = $validator;
         $this->service = $service;
