@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Responses\ErrorResponses\FunkyErrorResponse;
 use App\Responses\FunkyResponse;
 use Closure;
 
@@ -9,7 +10,7 @@ class FunkyAuthenticationToken
 {
     private $response;
 
-    public function __construct(FunkyResponse $response)
+    public function __construct(FunkyErrorResponse $response)
     {
         $this->response = $response;
     }
