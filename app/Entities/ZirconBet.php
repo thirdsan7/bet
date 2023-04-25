@@ -222,7 +222,7 @@ class ZirconBet implements IBet
      * @param  float $turnover
      * @return void
      */
-    public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover): void
+    public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover = null): void
     {
         $transaction = $this->repo->getBySboClientIDGameIDRoundDetID(
             $player->getClientID(), 
@@ -235,7 +235,7 @@ class ZirconBet implements IBet
 
         $this->roundDetID = $roundDetID;
         $this->totalWin = $totalWin;
-        $this->turnover = $turnover;
+        $this->turnover = $turnover ?? $transaction->stake;
         $this->stake = $transaction->stake;
         $this->transactionID = $transaction->transactionCWID;
         $this->sboClientID = $player->getClientID();

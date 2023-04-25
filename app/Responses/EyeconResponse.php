@@ -5,17 +5,15 @@ use Illuminate\Http\Response;
 use App\Entities\Interfaces\IPlayer;
 
 class EyeconResponse
-{    
+{   
     /**
-     * formatted eyecon response for bet
+     * formatted eyecon balance response 
      *
      * @param  IPlayer $player
      * @return Response
      */
-    public function bet(IPlayer $player): Response
+    public function balance(IPlayer $player): Response
     {
         return response("status=ok&bal={$player->getBalance()}");
     }
-    
-    
 }
