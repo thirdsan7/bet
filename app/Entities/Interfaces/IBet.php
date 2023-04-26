@@ -19,7 +19,7 @@ interface IBet
     public function getStatementDate(): string;
     
     public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void;
-    public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover);
+    public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover = null): void;
     public function create(): void;
     public function settle(): void;
     

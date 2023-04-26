@@ -11,4 +11,6 @@ interface IPlayer
     public function getSessionID(): string;
     public function setBalance(float $balance): void;
     public function getBalance(): float;
+    public function getIp(): string|null;
+    public function initByClientID(int $clientID): void;
 }
