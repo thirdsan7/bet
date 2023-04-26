@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use App\Entities\Player;
 use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
+use App\Entities\Interfaces\IBet;
+use App\Entities\Interfaces\IGame;
+use App\Entities\Interfaces\IPlayer;
 use App\Services\BetService;
 use Illuminate\Http\Request;
 use App\Responses\EyeconResponse;
@@ -46,12 +49,15 @@ class EyeconController extends Controller
         switch($request->type){
             case 'BET':
                 return $this->bet($request, $player, $game, $bet);
+            case 'WIN':
+            case 'LOSE':
+                return $this->settle($request, $player, $game, $bet);
             default:
                 throw new \Exception('Invalid type');
         }
     }
 
-    private function bet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
+    private function bet(Request $request, IPlayer $player, IGame $game, IBet $bet)
     {
         $game->initByGameID($request->gameid);
 
@@ -61,6 +67,19 @@ class EyeconController extends Controller
         
         $this->service->startBet($player, $game, $bet);
 
-        return $this->response->bet($player);
+        return $this->response->balance($player);
+    }
+
+    private function settle(Request $request, IPlayer $player, IGame $game, IBet $bet)
+    {
+        $game->initByGameID($request->gameid);
+
+        $player->initByClientID($request->uid);
+
+        $bet->init($player, $game, $request->round, $request->win);
+
+        $this->service->settleBet($player, $bet);
+
+        return $this->response->balance($player);
     }
 }
