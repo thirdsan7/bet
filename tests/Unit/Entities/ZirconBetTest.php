@@ -162,7 +162,8 @@ class ZirconBetTest extends TestCase
             ->with('roundDetID', 1, 'sessionID', 2, 10.0, 'roundDetID-2-'.env('ENV_ID'));
 
         $bet = $this->makeBet($mockRepo);
-        $bet->new($player, $game, 'roundDetID', 10.0, 'ip');
+        $bet->new($player, $game, 'roundDetID');
+        $bet->setStake(10.0);
 
         $bet->create();
     }

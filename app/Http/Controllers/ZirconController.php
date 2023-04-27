@@ -57,7 +57,7 @@ class ZirconController extends Controller
      * @param  ZirconBet $bet
      * @return JsonResponse
      */
-    public function sellBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet): JsonResponse
+    public function sellBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet): JsonResponse
     {
         $this->validator->validate($request, self::SELL_BET_RULES);
 
@@ -65,7 +65,9 @@ class ZirconController extends Controller
 
         $player->initBySessionIDGameID($request->sessionID, $game);
         
-        $bet->new($player, $game, $request->roundDetID, $request->stake, $request->ip);
+        $bet->new($player, $game, $request->roundDetID);
+        $bet->setStake($request->stake);
+        $bet->setIp($request->ip);
         
         $this->service->startBet($player, $game, $bet);
 

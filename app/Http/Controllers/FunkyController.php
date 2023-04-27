@@ -49,7 +49,7 @@ class FunkyController extends Controller
      * @param  ZirconBet $bet
      * @return JsonResponse
      */
-    public function placeBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
+    public function placeBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet)
     {
         $this->validator->validate($request, self::PLACE_BET_RULES);
 
@@ -57,7 +57,9 @@ class FunkyController extends Controller
 
         $player->initBySessionIDGameID($request->sessionId, $game);
         
-        $bet->new($player, $game, $request->input('bet.refNo'), $request->input('bet.stake'), $request->playerIp);
+        $bet->new($player, $game, $request->input('bet.refNo'));
+        $bet->setStake($request->input('bet.stake'));
+        $bet->setIp($request->playerIp);
     
         $this->service->startBet($player, $game, $bet);
 

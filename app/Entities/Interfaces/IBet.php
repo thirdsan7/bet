@@ -24,7 +24,7 @@ interface IBet
     public function setIp(string $ip): void;
     public function getIp(): string;
     
-    public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void;
+    public function new(IPlayer $player, IGame $game, string $roundDetID): void;
     public function initByGamePlayerRoundDetID(IGame $game, IPlayer $player, string $roundDetID): void;
     public function create(): void;
     public function settle(): void;

@@ -241,7 +241,7 @@ class ZirconBet implements IBet
      * @throws RoundAlreadyExistsException
      * 
      */
-    public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void
+    public function new(IPlayer $player, IGame $game, string $roundDetID): void
     {
         $transaction = $this->repo->getBySboClientIDGameIDRoundDetID(
             $player->getClientID(),
@@ -253,8 +253,6 @@ class ZirconBet implements IBet
             throw new RoundAlreadyExistsException;
 
         $this->roundDetID = $roundDetID;
-        $this->stake = $stake;
-        $this->ip = $ip;
         $this->gameID = $game->getGameID();
         $this->sboClientID = $player->getClientID();
         $this->sessionID = $player->getSessionID();
