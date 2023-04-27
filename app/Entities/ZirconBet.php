@@ -13,6 +13,7 @@ class ZirconBet implements IBet
 {
     const WIN = 'W';
     const LOSE = 'L';
+    const RUNNING = 'R';
 
     private $repo;
 
@@ -215,7 +216,16 @@ class ZirconBet implements IBet
      */
     public function getStatus(): string
     {
-        return $this->status;
+        switch($this->status) {
+            case 'Running':
+                return self::RUNNING;
+            case 'Win':
+                return self::WIN;
+            case 'Lose':
+                return self::LOSE;
+            default:
+                return $this->status;
+        }
     }
     
     /**
