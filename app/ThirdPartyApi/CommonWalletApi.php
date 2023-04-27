@@ -14,6 +14,7 @@ class CommonWalletApi implements IMotherApi
     const RANDOM_STRING_LENGTH = 15;
     const PLACE_BET_URI = '/Bet/PlaceBet';
     const SETTLE_BET_URI = '/Bet/SettleBet';
+    const CHECK_BET_URI = '/Bet/CheckBet';
 
     private $http;
     private $lib;
@@ -94,10 +95,21 @@ class CommonWalletApi implements IMotherApi
 
         $this->callApi($request, self::SETTLE_BET_URI);
     }
-
+    
+    /**
+     * calls CommonWallet API's checkBet
+     *
+     * @param  IBet $bet
+     * @return void
+     */
     public function checkBet(IBet $bet): void
     {
+        $request = [
+            'PlayerId' => $bet->getClientID(),
+            'TransactionId' => $bet->getRefNo()
+        ];
 
+        $this->callApi($request, self::CHECK_BET_URI);
     }
     
     /**
