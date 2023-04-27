@@ -8,6 +8,7 @@ interface IBet
 {
     public function getIp(): string;
     public function getStake(): float;
+    public function setStake(float $stake): void;
     public function getRoundDetID(): string;
     public function getTotalWin(): float;
     public function getTurnover(): float;
@@ -18,6 +19,7 @@ interface IBet
     public function setStatementDate(string $statementDate): void;
     public function getStatementDate(): string;
     public function getStatus(): string;
+    public function setStatus(string $status): void;
     
     public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void;
     public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover = null): void;

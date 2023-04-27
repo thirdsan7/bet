@@ -68,6 +68,19 @@ class ZirconBet implements IBet
     {
         return $this->stake;
     }
+    
+    /**
+     * set stake
+     *
+     * @param  float $stake
+     * @return void
+     * 
+     * @codeCoverageIgnore
+     */
+    public function setStake(float $stake): void
+    {
+        $this->stake = $stake;
+    }
 
     /**
      * getTotalWin
@@ -153,10 +166,30 @@ class ZirconBet implements IBet
     {
         return $this->statementDate;
     }
-
+    
+    /**
+     * returns status
+     *
+     * @return string
+     * 
+     * @codeCoverageIgnore
+     */
     public function getStatus(): string
     {
         return $this->status;
+    }
+    
+    /**
+     * sets status
+     *
+     * @param  string $status
+     * @return void
+     * 
+     * @codeCoverageIgnore
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 
     /**

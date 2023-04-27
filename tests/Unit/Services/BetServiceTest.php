@@ -253,4 +253,75 @@ class BetServiceTest extends TestCase
         $service = $this->makeService($stubApi);
         $service->settleBet($player, $mockBet);
     }
+
+    public function test_checkBet_mockApi_checkBet()
+    {
+        $bet = $this->createStub(IBet::class);
+
+        $mockApi = $this->createMock(CommonWalletApi::class);
+        $mockApi->expects($this->once())
+            ->method('checkBet')
+            ->with($bet);
+
+        $mockApi->method('getResponse')
+            ->willReturn((object)[
+                'status' => 'status',
+                'stake' => 10,
+            ]);
+
+        $service = $this->makeService($mockApi);
+        $service->checkBet($bet);
+    }
+
+    public function test_checkBet_mockApi_getResponse()
+    {
+        $bet = $this->createStub(IBet::class);
+
+        $mockApi = $this->createMock(CommonWalletApi::class);
+        $mockApi->expects($this->once())
+            ->method('getResponse')
+            ->willReturn((object)[
+                'status' => 'status',
+                'stake' => 10,
+            ]);
+
+        $service = $this->makeService($mockApi);
+        $service->checkBet($bet);
+    }
+
+    public function test_checkBet_mockBet_setStatus()
+    {
+        $mockBet = $this->createMock(IBet::class);
+        $mockBet->expects($this->once())
+            ->method('setStatus')
+            ->with('status');
+
+        $stubApi = $this->createStub(CommonWalletApi::class);
+        $stubApi->method('getResponse')
+            ->willReturn((object)[
+                'status' => 'status',
+                'stake' => 10,
+            ]);
+
+        $service = $this->makeService($stubApi);
+        $service->checkBet($mockBet);
+    }
+
+    public function test_checkBet_mockBet_setStake()
+    {
+        $mockBet = $this->createMock(IBet::class);
+        $mockBet->expects($this->once())
+            ->method('setStake')
+            ->with(10);
+
+        $stubApi = $this->createStub(CommonWalletApi::class);
+        $stubApi->method('getResponse')
+            ->willReturn((object)[
+                'status' => 'status',
+                'stake' => 10,
+            ]);
+
+        $service = $this->makeService($stubApi);
+        $service->checkBet($mockBet);
+    }
 }

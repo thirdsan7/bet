@@ -94,6 +94,11 @@ class CommonWalletApi implements IMotherApi
 
         $this->callApi($request, self::SETTLE_BET_URI);
     }
+
+    public function checkBet(IBet $bet): void
+    {
+
+    }
     
     /**
      * returns response data from api request.

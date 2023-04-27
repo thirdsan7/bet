@@ -56,9 +56,20 @@ class BetService
         $player->setBalance($apiResponse->balance);
         $bet->setStatementDate($apiResponse->statementDate);
     }
-
+    
+    /**
+     * calls CW api to get details about a specific bet.
+     *
+     * @param  IBet $bet
+     * @return void
+     */
     public function checkBet(IBet $bet): void
     {
-        
+        $this->api->checkBet($bet);
+
+        $apiResponse = $this->api->getResponse();
+
+        $bet->setStatus($apiResponse->status);
+        $bet->setStake($apiResponse->stake);
     }
 }
