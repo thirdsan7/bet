@@ -42,13 +42,13 @@ class EyeconController extends Controller
         $this->response = $response;
     }
 
-    public function entry(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
+    public function entry(Request $request, CasinoGame $game, Player $player, ZirconBet $bet)
     {
         $this->validator->validate($request, self::EYECON_REQUEST);
 
         switch($request->type){
             case 'BET':
-                return $this->bet($request, $player, $game, $bet);
+                return $this->bet($request, $game, $player, $bet);
             case 'WIN':
             case 'LOSE':
                 return $this->settle($request, $game, $player, $bet);
@@ -57,13 +57,15 @@ class EyeconController extends Controller
         }
     }
 
-    private function bet(Request $request, IPlayer $player, IGame $game, IBet $bet)
+    private function bet(Request $request, IGame $game, IPlayer $player, IBet $bet)
     {
         $game->initByGameID($request->gameid);
 
         $player->initBySessionIDGameID($request->guid, $game);
         
-        $bet->new($player, $game, $request->round, $request->wager, $player->getIp());
+        $bet->new($player, $game, $request->round);
+        $bet->setStake($request->wager);
+        $bet->setIp($player->getIp());
         
         $this->service->startBet($player, $game, $bet);
 

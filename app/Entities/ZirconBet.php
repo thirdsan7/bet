@@ -338,8 +338,8 @@ class ZirconBet implements IBet
     {
         $this->repo->updateByTransactionID(
             [
-                'totalWin' => $this->totalWin,
-                'turnover' => $this->turnover,
+                'totalWin' => $this->getTotalWin(),
+                'turnover' => $this->getTurnover(),
                 'event' => $this->getEvent()
             ],
             $this->transactionID
