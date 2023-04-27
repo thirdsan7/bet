@@ -56,4 +56,26 @@ const RUNNING_EVENT = 'R';
         ]);
     }
     
+    /**
+     * formatted zirocn response for extractBet
+     *
+     * @param  IBet $bet
+     * @return JsonResponse
+     */
+    public function extractBet(IBet $bet): JsonResponse
+    {
+        return response()->json([
+            'error' => [
+                'code' => 0,
+                'message' => 'Success'
+            ],
+            'data' => [
+                'roundDetID' => $bet->getRoundDetID(),
+                'gameID' => $bet->getGameID(),
+                'event' => $bet->getStatus(),
+                'stake' => $bet->getStake()
+            ]
+        ]);
+    }
+    
 }

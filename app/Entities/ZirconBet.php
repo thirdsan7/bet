@@ -16,16 +16,17 @@ class ZirconBet implements IBet
 
     private $repo;
 
-    private $roundDetID;
-    private $stake;
-    private $ip;
-    private $totalWin;
-    private $turnover;
-    private $transactionID;
-    private $gameID;
-    private $sboClientID;
-    private $sessionID;
-    private $statementDate;
+    private $roundDetID = null;
+    private $stake = 0;
+    private $ip = null;
+    private $totalWin = 0;
+    private $turnover = 0;
+    private $transactionID = null;
+    private $gameID = 0;
+    private $sboClientID = 0;
+    private $sessionID = null;
+    private $statementDate = null;
+    private $status = null;
 
     public function __construct(TransactionRepository $repo)
     {
@@ -153,6 +154,11 @@ class ZirconBet implements IBet
         return $this->statementDate;
     }
 
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
     /**
      * initialize class's bet data
      *
@@ -238,6 +244,24 @@ class ZirconBet implements IBet
         $this->roundDetID = $roundDetID;
         $this->totalWin = $totalWin;
         $this->turnover = $turnover ?? $transaction->stake;
+        $this->stake = $transaction->stake;
+        $this->transactionID = $transaction->transactionCWID;
+        $this->sboClientID = $player->getClientID();
+        $this->gameID = $game->getGameID();
+    }
+
+    public function initByGamePlayerRoundDetID(IGame $game, IPlayer $player, string $roundDetID): void
+    {
+        $transaction = $this->repo->getBySboClientIDGameIDRoundDetID(
+            $player->getClientID(),
+            $game->getGameID(),
+            $roundDetID
+        );
+
+        if (empty($transaction))
+            throw new RoundNotFoundException;
+
+        $this->roundDetID = $roundDetID;
         $this->stake = $transaction->stake;
         $this->transactionID = $transaction->transactionCWID;
         $this->sboClientID = $player->getClientID();

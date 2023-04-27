@@ -6,11 +6,8 @@ use App\Entities\ZirconBet;
 use App\Entities\CasinoGame;
 use App\Services\BetService;
 use Illuminate\Http\Request;
-use App\Entities\Interfaces\IBet;
 use App\Responses\ZirconResponse;
 use Illuminate\Http\JsonResponse;
-use App\Entities\Interfaces\IGame;
-use App\Entities\Interfaces\IPlayer;
 use App\Http\Controllers\Controller;
 use App\Validators\Validator;
 
@@ -32,6 +29,12 @@ class ZirconController extends Controller
         'clientID' => 'required',
         'totalWin' => 'required',
         'turnover' => 'required'
+    ];
+
+    const EXTRACT_BET_RULES = [
+        'roundDetID' => 'required',
+        'gameID' => 'required',
+        'clientID' => 'required'
     ];
 
     private $validator;
@@ -86,10 +89,32 @@ class ZirconController extends Controller
 
         $player->initByClientID($request->clientID);
 
-        $bet->init($player, $game, $request->roundDetID, $request->totalWin, $request->turnover);
+        $bet->init($player, $game, $request->roundDetID, $request->totalWin, $request->turnover); //refactor or rename
 
         $this->service->settleBet($player, $bet);
 
         return $this->response->resultBet($player, $bet);
+    }
+    
+    /**
+     * zircon API extractBet is to get the details of the bet
+     * 
+     * @param Request $request
+     *
+     * @return void
+     */
+    public function extractBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet)
+    {
+        $this->validator->validate($request, self::EXTRACT_BET_RULES);
+
+        $game->initByGameID($request->gameID);
+
+        $player->initByClientID($request->clientID);
+
+        $bet->initByGamePlayerRoundDetID($game, $player, $request->roundDetID);
+
+        $this->service->checkBet($bet);
+
+        return $this->response->extractBet($bet);
     }
 }

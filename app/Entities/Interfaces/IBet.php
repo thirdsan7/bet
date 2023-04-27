@@ -17,9 +17,11 @@ interface IBet
     public function getRefNo(): string;
     public function setStatementDate(string $statementDate): void;
     public function getStatementDate(): string;
+    public function getStatus(): string;
     
     public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void;
     public function init(IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover = null): void;
+    public function initByGamePlayerRoundDetID(IGame $game, IPlayer $player, string $roundDetID): void;
     public function create(): void;
     public function settle(): void;
     

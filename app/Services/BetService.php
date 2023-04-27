@@ -56,4 +56,9 @@ class BetService
         $player->setBalance($apiResponse->balance);
         $bet->setStatementDate($apiResponse->statementDate);
     }
+
+    public function checkBet(IBet $bet): void
+    {
+        
+    }
 }
