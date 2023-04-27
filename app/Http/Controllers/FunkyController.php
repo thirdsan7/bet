@@ -81,13 +81,9 @@ class FunkyController extends Controller
 
         $player->initByClientID($request->input('betResultReq.playerId'));
 
-        $bet->init(
-            $player,
-            $game,
-            $request->refNo,
-            $request->input('betResultReq.winAmount'),
-            $request->input('betResultReq.effectiveStake')
-        );
+        $bet->initByGamePlayerRoundDetID($game, $player, $request->refNo);
+        $bet->setTotalWin($request->input('betResultReq.winAmount'));
+        $bet->setTurnover($request->input('betResultReq.effectiveStake'));
 
         $this->service->settleBet($player, $bet);
 

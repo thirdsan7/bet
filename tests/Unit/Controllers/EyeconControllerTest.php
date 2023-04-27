@@ -314,7 +314,7 @@ class EyeconControllerTest extends TestCase
         $controller->entry($request, $mockPlayer, $game, $bet);
     }
 
-    public function test_entry_typeWinMockBet_init()
+    public function test_entry_typeWinMockBet_initByGamePlayerRoundDetID()
     {
         $request = new Request([
             'uid' => 1,
@@ -337,8 +337,38 @@ class EyeconControllerTest extends TestCase
 
         $mockBet = $this->createMock(ZirconBet::class);
         $mockBet->expects($this->once())
-            ->method('init')
-            ->with($player, $game, 'round', 100);
+            ->method('initByGamePlayerRoundDetID')
+            ->with($game, $player, 'round');
+
+        $controller = $this->makeController();
+        $controller->entry($request, $player, $game, $mockBet);
+    }
+
+    public function test_entry_typeWinMockBet_setTotalWin()
+    {
+        $request = new Request([
+            'uid' => 1,
+            'guid' => 'guid',
+            'accessid' => 'accessid',
+            'type' => 'WIN',
+            'round' => 'round',
+            'gameid' => 2,
+            'ref' => 'ref',
+            'gtype' => 'gtype',
+            'cur' => 'cur',
+            'status' => 'status',
+            'wager' => 10,
+            'win' => 100,
+            'jpwin' => 'jpwin'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setTotalWin')
+            ->with(100);
 
         $controller = $this->makeController();
         $controller->entry($request, $player, $game, $mockBet);

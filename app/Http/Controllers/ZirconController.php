@@ -81,7 +81,7 @@ class ZirconController extends Controller
      * @param  ZirconBet $bet
      * @return JsonResponse
      */
-    public function resultBet(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
+    public function resultBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet): JsonResponse
     {
         $this->validator->validate($request, self::RESULT_BET_RULES);
 
@@ -89,7 +89,9 @@ class ZirconController extends Controller
 
         $player->initByClientID($request->clientID);
 
-        $bet->init($player, $game, $request->roundDetID, $request->totalWin, $request->turnover); //refactor or rename
+        $bet->initByGamePlayerRoundDetID($game, $player, $request->roundDetID);
+        $bet->setTotalWin($request->totalWin);
+        $bet->setTurnover($request->turnover);
 
         $this->service->settleBet($player, $bet);
 
@@ -97,13 +99,13 @@ class ZirconController extends Controller
     }
     
     /**
-     * zircon API extractBet is to get the details of the bet
+     * Zircon API extractBet is to get the details of the bet
      * 
      * @param Request $request
      *
      * @return void
      */
-    public function extractBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet)
+    public function extractBet(Request $request, CasinoGame $game, Player $player, ZirconBet $bet): JsonResponse
     {
         $this->validator->validate($request, self::EXTRACT_BET_RULES);
 

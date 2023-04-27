@@ -51,7 +51,7 @@ class EyeconController extends Controller
                 return $this->bet($request, $player, $game, $bet);
             case 'WIN':
             case 'LOSE':
-                return $this->settle($request, $player, $game, $bet);
+                return $this->settle($request, $game, $player, $bet);
             default:
                 throw new \Exception('Invalid type');
         }
@@ -70,13 +70,14 @@ class EyeconController extends Controller
         return $this->response->balance($player);
     }
 
-    private function settle(Request $request, IPlayer $player, IGame $game, IBet $bet)
+    private function settle(Request $request, IGame $game, IPlayer $player, IBet $bet)
     {
         $game->initByGameID($request->gameid);
 
         $player->initByClientID($request->uid);
 
-        $bet->init($player, $game, $request->round, $request->win);
+        $bet->initByGamePlayerRoundDetID($game, $player, $request->round);
+        $bet->setTotalWin($request->win);
 
         $this->service->settleBet($player, $bet);
 
