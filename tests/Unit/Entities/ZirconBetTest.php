@@ -162,7 +162,8 @@ class ZirconBetTest extends TestCase
             ->with('roundDetID', 1, 'sessionID', 2, 10.0, 'roundDetID-2-'.env('ENV_ID'));
 
         $bet = $this->makeBet($mockRepo);
-        $bet->new($player, $game, 'roundDetID', 10.0, 'ip');
+        $bet->new($player, $game, 'roundDetID');
+        $bet->setStake(10.0);
 
         $bet->create();
     }
@@ -188,7 +189,7 @@ class ZirconBetTest extends TestCase
         $this->assertSame('roundDetID-1-'.env('ENV_ID'), $result);
     }
 
-    public function test_init_mockRepo_getBySboClientIDGameIDRoundDetID()
+    public function test_initByGamePlayerRoundDetID_mockRepo_getBySboClientIDGameIDRoundDetID()
     {
         $player = $this->createStub(IPlayer::class);
         $player->method('getClientID')
@@ -199,8 +200,6 @@ class ZirconBetTest extends TestCase
             ->willReturn(2);
 
         $roundDetID = 'roundDetID';
-        $totalWin = 10.0;
-        $turnover = 5.0;
 
         $mockRepo = $this->createMock(TransactionRepository::class);
         $mockRepo->expects($this->once())
@@ -211,16 +210,14 @@ class ZirconBetTest extends TestCase
             ]));
 
         $bet = $this->makeBet($mockRepo);
-        $bet->init($player, $game, $roundDetID, $totalWin, $turnover);
+        $bet->initByGamePlayerRoundDetID($game, $player, $roundDetID);
     }
 
-    public function test_init_stubRepoEmptyReturn_RoundNotFoundException()
+    public function test_initByGamePlayerRoundDetID_stubRepoEmptyReturn_RoundNotFoundException()
     {
         $player = $this->createStub(IPlayer::class);
         $game = $this->createStub(IGame::class);
         $roundDetID = 'roundDetID';
-        $totalWin = 10.0;
-        $turnover = 5.0;
 
         $this->expectException(RoundNotFoundException::class);
 
@@ -229,7 +226,7 @@ class ZirconBetTest extends TestCase
             ->willReturn(null);
 
         $bet = $this->makeBet($stubRepo);
-        $bet->init($player, $game, $roundDetID, $totalWin, $turnover);
+        $bet->initByGamePlayerRoundDetID($game, $player, $roundDetID);
     }
 
     public function test_settle_mockRepoTotalWin0_updateByTransactionID()
@@ -256,7 +253,9 @@ class ZirconBetTest extends TestCase
             ]));
 
         $bet = $this->makeBet($mockRepo);
-        $bet->init($player, $game, $roundDetID, $totalWin, $turnover);
+        $bet->initByGamePlayerRoundDetID($game, $player, $roundDetID);
+        $bet->setTotalWin($totalWin);
+        $bet->setTurnover($turnover);
 
         $bet->settle();
     }
@@ -285,7 +284,9 @@ class ZirconBetTest extends TestCase
             ]));
 
         $bet = $this->makeBet($mockRepo);
-        $bet->init($player, $game, $roundDetID, $totalWin, $turnover);
+        $bet->initByGamePlayerRoundDetID($game, $player, $roundDetID);
+        $bet->setTotalWin($totalWin);
+        $bet->setTurnover($turnover);
 
         $bet->settle();
     }

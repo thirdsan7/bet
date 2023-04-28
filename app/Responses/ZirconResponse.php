@@ -34,7 +34,7 @@ const RUNNING_EVENT = 'R';
     }
     
     /**
-     * formatted zirocn response for resultBet
+     * formatted zircon response for resultBet
      *
      * @param  IPlayer $player
      * @param  IGame $game
@@ -52,6 +52,28 @@ const RUNNING_EVENT = 'R';
                 'roundDetID' => $bet->getRoundDetID(),
                 'gameID' => $bet->getGameID(),
                 'balance' => $player->getBalance(),
+            ]
+        ]);
+    }
+    
+    /**
+     * formatted zircon response for extractBet
+     *
+     * @param  IBet $bet
+     * @return JsonResponse
+     */
+    public function extractBet(IBet $bet): JsonResponse
+    {
+        return response()->json([
+            'error' => [
+                'code' => 0,
+                'message' => 'Success'
+            ],
+            'data' => [
+                'roundDetID' => $bet->getRoundDetID(),
+                'gameID' => $bet->getGameID(),
+                'event' => $bet->getStatus(),
+                'stake' => $bet->getStake()
             ]
         ]);
     }

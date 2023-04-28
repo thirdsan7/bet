@@ -204,7 +204,7 @@ class BetCompleteTest extends TestCase
         $this->assertSame('status=invalid&error=16', $response->original);
     }
 
-    public function test_sellBet_mockCWApi_expectedCWApiParams()
+    public function test_settleBetComplete_mockCWApi_expectedCWApiParams()
     {
         $request = [
             'uid' => 1,

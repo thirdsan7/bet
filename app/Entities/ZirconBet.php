@@ -13,19 +13,21 @@ class ZirconBet implements IBet
 {
     const WIN = 'W';
     const LOSE = 'L';
+    const RUNNING = 'R';
 
     private $repo;
 
-    private $roundDetID;
-    private $stake;
-    private $ip;
-    private $totalWin;
-    private $turnover;
-    private $transactionID;
-    private $gameID;
-    private $sboClientID;
-    private $sessionID;
-    private $statementDate;
+    private $roundDetID = null;
+    private $stake = null;
+    private $ip = null;
+    private $totalWin = null;
+    private $turnover = null;
+    private $transactionID = null;
+    private $gameID = null;
+    private $sboClientID = null;
+    private $sessionID = null;
+    private $statementDate = null;
+    private $status = null;
 
     public function __construct(TransactionRepository $repo)
     {
@@ -55,6 +57,19 @@ class ZirconBet implements IBet
     {
         return $this->ip;
     }
+    
+    /**
+     * setIp
+     *
+     * @param  string $ip
+     * @return void
+     * 
+     * @codeCoverageIgnore
+     */
+    public function setIp(string $ip): void
+    {
+        $this->ip = $ip;
+    }
 
     /**
      * returns stake
@@ -66,6 +81,19 @@ class ZirconBet implements IBet
     public function getStake(): float
     {
         return $this->stake;
+    }
+    
+    /**
+     * set stake
+     *
+     * @param  float $stake
+     * @return void
+     * 
+     * @codeCoverageIgnore
+     */
+    public function setStake(float $stake): void
+    {
+        $this->stake = $stake;
     }
 
     /**
@@ -79,6 +107,19 @@ class ZirconBet implements IBet
     {
         return $this->totalWin;
     }
+    
+    /**
+     * setTotalWin
+     *
+     * @param  float $totalWin
+     * @return void
+     * 
+     * @codeCoverageIgnore
+     */
+    public function setTotalWin(float $totalWin): void
+    {
+        $this->totalWin = $totalWin;
+    }
 
     /**
      * getTurnover
@@ -89,7 +130,20 @@ class ZirconBet implements IBet
      */
     public function getTurnover(): float
     {
-        return $this->turnover;
+        return $this->turnover ?? $this->stake;
+    }
+    
+    /**
+     * setTurnover
+     *
+     * @param  float $turnover
+     * @return void
+     * 
+     * @codeCoverageIgnore
+     */
+    public function setTurnover(float $turnover): void
+    {
+        $this->turnover = $turnover;
     }
 
     /**
@@ -152,6 +206,40 @@ class ZirconBet implements IBet
     {
         return $this->statementDate;
     }
+    
+    /**
+     * returns status
+     *
+     * @return string
+     * 
+     * @codeCoverageIgnore
+     */
+    public function getStatus(): string
+    {
+        switch($this->status) {
+            case 'Running':
+                return self::RUNNING;
+            case 'Win':
+                return self::WIN;
+            case 'Lose':
+                return self::LOSE;
+            default:
+                return $this->status;
+        }
+    }
+    
+    /**
+     * sets status
+     *
+     * @param  string $status
+     * @return void
+     * 
+     * @codeCoverageIgnore
+     */
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
 
     /**
      * initialize class's bet data
@@ -160,9 +248,10 @@ class ZirconBet implements IBet
      * @param  float $stake
      * @param  string $ip
      * @return void
+     * @throws RoundAlreadyExistsException
      * 
      */
-    public function new(IPlayer $player, IGame $game, string $roundDetID, float $stake, string $ip): void
+    public function new(IPlayer $player, IGame $game, string $roundDetID): void
     {
         $transaction = $this->repo->getBySboClientIDGameIDRoundDetID(
             $player->getClientID(),
@@ -174,8 +263,6 @@ class ZirconBet implements IBet
             throw new RoundAlreadyExistsException;
 
         $this->roundDetID = $roundDetID;
-        $this->stake = $stake;
-        $this->ip = $ip;
         $this->gameID = $game->getGameID();
         $this->sboClientID = $player->getClientID();
         $this->sessionID = $player->getSessionID();
@@ -211,21 +298,18 @@ class ZirconBet implements IBet
             $this->getRefNo()
         );
     }
-
+    
     /**
      * initialize bet class via getting data from DB
-     * set stake as turnover if no turnover provided
      *
-     * @param  IPlayer $player
-     * @param  IGame $game
-     * @param  string $roundDetID
-     * @param  float $totalWin
-     * @param  float $turnover
+     * @param  mixed $game
+     * @param  mixed $player
+     * @param  mixed $roundDetID
      * @return void
+     * @throws RoundNotFoundException
      */
-    public function init(
-        IPlayer $player, IGame $game, string $roundDetID, float $totalWin, float $turnover = null
-    ): void {
+    public function initByGamePlayerRoundDetID(IGame $game, IPlayer $player, string $roundDetID): void
+    {
         $transaction = $this->repo->getBySboClientIDGameIDRoundDetID(
             $player->getClientID(),
             $game->getGameID(),
@@ -236,12 +320,10 @@ class ZirconBet implements IBet
             throw new RoundNotFoundException;
 
         $this->roundDetID = $roundDetID;
-        $this->totalWin = $totalWin;
-        $this->turnover = $turnover ?? $transaction->stake;
         $this->stake = $transaction->stake;
-        $this->transactionID = $transaction->transactionCWID;
         $this->sboClientID = $player->getClientID();
         $this->gameID = $game->getGameID();
+        $this->transactionID = $transaction->transactionCWID;
     }
 
     /**
@@ -266,8 +348,8 @@ class ZirconBet implements IBet
     {
         $this->repo->updateByTransactionID(
             [
-                'totalWin' => $this->totalWin,
-                'turnover' => $this->turnover,
+                'totalWin' => $this->getTotalWin(),
+                'turnover' => $this->getTurnover(),
                 'event' => $this->getEvent()
             ],
             $this->transactionID

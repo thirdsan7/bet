@@ -50,7 +50,7 @@ class ZirconControllerTest extends TestCase
 
         $controller = $this->makeController($mockLib);
 
-        $controller->sellBet($request, $player, $game, $bet);
+        $controller->sellBet($request, $game, $player, $bet);
     }
 
     public function test_sellBet_mockGame_initByGameID()
@@ -73,7 +73,7 @@ class ZirconControllerTest extends TestCase
 
         $controller = $this->makeController();
 
-        $controller->sellBet($request, $player, $mockGame, $bet);
+        $controller->sellBet($request, $mockGame, $player, $bet);
     }
 
     public function test_sellBet_mockPlayer_initBySessionIDGameID()
@@ -98,7 +98,7 @@ class ZirconControllerTest extends TestCase
 
         $controller = $this->makeController();
 
-        $controller->sellBet($request, $mockPlayer, $game, $bet);
+        $controller->sellBet($request, $game, $mockPlayer, $bet);
     }
 
     public function test_sellBet_mockBet_new()
@@ -117,11 +117,57 @@ class ZirconControllerTest extends TestCase
         $mockBet = $this->createMock(ZirconBet::class);
         $mockBet->expects($this->once())
             ->method('new')
-            ->with($player, $game, 'roundDetID', 10.0, 'testIp');
+            ->with($player, $game, 'roundDetID');
         
         $controller = $this->makeController();
 
-        $controller->sellBet($request, $player, $game, $mockBet);
+        $controller->sellBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_sellBet_mockBet_setStake()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'sessionID' => 'sessionID',
+            'roundDetID' => 'roundDetID',
+            'stake' => 10.0,
+            'ip' => 'testIp'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+            
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setStake')
+            ->with(10.0);
+        
+        $controller = $this->makeController();
+
+        $controller->sellBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_sellBet_mockBet_setIp()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'sessionID' => 'sessionID',
+            'roundDetID' => 'roundDetID',
+            'stake' => 10.0,
+            'ip' => 'testIp'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+            
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setIp')
+            ->with('testIp');
+        
+        $controller = $this->makeController();
+
+        $controller->sellBet($request, $game, $player, $mockBet);
     }
 
     public function test_sellBet_mockService_startBet()
@@ -145,10 +191,10 @@ class ZirconControllerTest extends TestCase
         
         $controller = $this->makeController(null, $mockService);
 
-        $controller->sellBet($request, $player, $game, $bet);
+        $controller->sellBet($request, $game, $player, $bet);
     }
 
-    public function test_sellBet_mockResponse_resultBet()
+    public function test_sellBet_mockResponse_sellBet()
     {
         $request = new Request([
             'gameID' => 1,
@@ -168,7 +214,7 @@ class ZirconControllerTest extends TestCase
             ->with($player, $bet);
 
         $controller = $this->makeController(null, null, $mockResponse);
-        $controller->sellBet($request, $player, $game, $bet);
+        $controller->sellBet($request, $game, $player, $bet);
     }
 
     public function test_resultBet_mockValidator_validate()
@@ -197,7 +243,7 @@ class ZirconControllerTest extends TestCase
             ]);
 
         $controller = $this->makeController($mockValidator);
-        $controller->resultBet($request, $player, $game, $bet);
+        $controller->resultBet($request, $game, $player, $bet);
     }
 
     public function test_resultBet_mockGame_initByGameID()
@@ -219,7 +265,7 @@ class ZirconControllerTest extends TestCase
         $bet = $this->createStub(ZirconBet::class);
 
         $controller = $this->makeController();
-        $controller->resultBet($request, $player, $mockGame, $bet);
+        $controller->resultBet($request, $mockGame, $player, $bet);
     }
 
     public function test_resultBet_mockPlayer_initByClientID()
@@ -241,10 +287,10 @@ class ZirconControllerTest extends TestCase
         $bet = $this->createStub(ZirconBet::class);
 
         $controller = $this->makeController();
-        $controller->resultBet($request, $mockPlayer, $game, $bet);
+        $controller->resultBet($request, $game, $mockPlayer, $bet);
     }
 
-    public function test_resultBet_mockBet_initByRoundDetIDPlayerGame()
+    public function test_resultBet_mockBet_initByGamePlayerRoundDetID()
     {
         $request = new Request([
             'gameID' => 1,
@@ -259,11 +305,55 @@ class ZirconControllerTest extends TestCase
 
         $mockBet = $this->createMock(ZirconBet::class);
         $mockBet->expects($this->once())
-            ->method('init')
-            ->with($player, $game, 'roundDetID', 10, 5);
+            ->method('initByGamePlayerRoundDetID')
+            ->with($game, $player, 'roundDetID');
 
         $controller = $this->makeController();
-        $controller->resultBet($request, $player, $game, $mockBet);
+        $controller->resultBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_resultBet_mockBet_setTotalWin()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'clientID' => 2,
+            'roundDetID' => 'roundDetID',
+            'totalWin' => 10,
+            'turnover' => 5
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setTotalWin')
+            ->with(10);
+
+        $controller = $this->makeController();
+        $controller->resultBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_resultBet_mockBet_setTurnover()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'clientID' => 2,
+            'roundDetID' => 'roundDetID',
+            'totalWin' => 10,
+            'turnover' => 5
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setTurnover')
+            ->with(5);
+
+        $controller = $this->makeController();
+        $controller->resultBet($request, $game, $player, $mockBet);
     }
 
     public function test_resultBet_mockService_settleBet()
@@ -286,7 +376,7 @@ class ZirconControllerTest extends TestCase
             ->with($player, $bet);
 
         $controller = $this->makeController(null, $mockBet);
-        $controller->resultBet($request, $player, $game, $bet);
+        $controller->resultBet($request, $game, $player, $bet);
     }
 
     public function test_resultBet_mockResponse_resultBet()
@@ -309,6 +399,133 @@ class ZirconControllerTest extends TestCase
             ->with($player, $bet);
 
         $controller = $this->makeController(null, null, $mockResponse);
-        $controller->resultBet($request, $player, $game, $bet);
+        $controller->resultBet($request, $game, $player, $bet);
+    }
+
+    public function test_extractBet_mockValidator_validate()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'clientID' => 2,
+            'roundDetID' => 'roundDetID'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $mockValidator = $this->createMock(Validator::class);
+        $mockValidator->expects($this->once())
+            ->method('validate')
+            ->with($request, [
+                'roundDetID' => 'required',
+                'gameID' => 'required',
+                'clientID' => 'required'
+            ]);
+
+        $controller = $this->makeController($mockValidator);
+        $controller->extractBet($request, $game, $player, $bet);
+    }
+
+    public function test_extractBet_mockGame_initByGameID()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'clientID' => 2,
+            'roundDetID' => 'roundDetID'
+        ]);
+
+        $mockGame = $this->createMock(CasinoGame::class);
+        $mockGame->expects($this->once())
+            ->method('initByGameID')
+            ->with(1);
+
+        $player = $this->createStub(Player::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $controller = $this->makeController();
+        $controller->extractBet($request, $mockGame, $player, $bet);
+    }
+
+    public function test_extractBet_mockPlayer_initByClientID()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'clientID' => 2,
+            'roundDetID' => 'roundDetID'
+        ]);
+
+        $mockPlayer = $this->createMock(Player::class);
+        $mockPlayer->expects($this->once())
+            ->method('initByClientID')
+            ->with(2);
+
+        $game = $this->createStub(CasinoGame::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $controller = $this->makeController();
+        $controller->extractBet($request, $game, $mockPlayer, $bet);
+    }
+
+    public function test_extractBet_mockBet_initByGamePlayerRoundDetID()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'clientID' => 2,
+            'roundDetID' => 'roundDetID'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('initByGamePlayerRoundDetID')
+            ->with($game, $player, 'roundDetID');
+
+        $controller = $this->makeController();
+        $controller->extractBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_extractBet_mockService_checkBet()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'clientID' => 2,
+            'roundDetID' => 'roundDetID'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $mockService = $this->createMock(BetService::class);
+        $mockService->expects($this->once())
+            ->method('checkBet')
+            ->with($bet);
+
+        $controller = $this->makeController(null, $mockService);
+        $controller->extractBet($request, $game, $player, $bet);
+    }
+
+    public function test_extractBet_mockResponse_extractBet()
+    {
+        $request = new Request([
+            'gameID' => 1,
+            'clientID' => 2,
+            'roundDetID' => 'roundDetID'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+        $bet = $this->createStub(ZirconBet::class);
+
+        $mockResponse = $this->createMock(ZirconResponse::class);
+        $mockResponse->expects($this->once())
+            ->method('extractBet')
+            ->with($bet);
+
+        $controller = $this->makeController(null, null, $mockResponse);
+        $controller->extractBet($request, $game, $player, $bet);
     }
 }

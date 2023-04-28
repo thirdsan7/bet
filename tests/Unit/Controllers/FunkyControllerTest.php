@@ -49,7 +49,7 @@ class FunkyControllerTest extends TestCase
             ]);
 
         $controller = $this->makeController($mockLib);
-        $controller->placeBet($request, $player, $game, $bet);
+        $controller->placeBet($request, $game, $player, $bet);
     }
 
     public function test_placeBet_mockGame_initByGameID()
@@ -73,7 +73,7 @@ class FunkyControllerTest extends TestCase
         $bet = $this->createStub(ZirconBet::class);
 
         $controller = $this->makeController();
-        $controller->placeBet($request, $player, $mockGame, $bet);
+        $controller->placeBet($request, $mockGame, $player, $bet);
     }
 
     public function test_placeBet_mockPlayer_initByGameID()
@@ -98,7 +98,7 @@ class FunkyControllerTest extends TestCase
         $bet = $this->createStub(ZirconBet::class);
 
         $controller = $this->makeController();
-        $controller->placeBet($request, $mockPlayer, $game, $bet);
+        $controller->placeBet($request, $game, $mockPlayer, $bet);
     }
 
     public function test_placeBet_mockBet_new()
@@ -119,10 +119,58 @@ class FunkyControllerTest extends TestCase
         $mockBet = $this->createMock(ZirconBet::class);
         $mockBet->expects($this->once())
             ->method('new')
-            ->with($player, $game, 'refNo', 10, 'playerIp');
+            ->with($player, $game, 'refNo');
 
         $controller = $this->makeController();
-        $controller->placeBet($request, $player, $game, $mockBet);
+        $controller->placeBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_placeBet_mockBet_setStake()
+    {
+        $request = new Request([
+            'bet' => [
+                'gameCode' => 1,
+                'refNo' => 'refNo',
+                'stake' => 10,
+            ],
+            'sessionId' => 'sessionId',
+            'playerIp' => 'playerIp'
+        ]);
+
+        $player = $this->createStub(Player::class);
+        $game = $this->createStub(CasinoGame::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setStake')
+            ->with(10);
+
+        $controller = $this->makeController();
+        $controller->placeBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_placeBet_mockBet_setIp()
+    {
+        $request = new Request([
+            'bet' => [
+                'gameCode' => 1,
+                'refNo' => 'refNo',
+                'stake' => 10,
+            ],
+            'sessionId' => 'sessionId',
+            'playerIp' => 'playerIp'
+        ]);
+
+        $player = $this->createStub(Player::class);
+        $game = $this->createStub(CasinoGame::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setIp')
+            ->with('playerIp');
+
+        $controller = $this->makeController();
+        $controller->placeBet($request, $game, $player, $mockBet);
     }
 
     public function test_placeBet_mockService_startBet()
@@ -147,7 +195,7 @@ class FunkyControllerTest extends TestCase
             ->with($player, $game, $bet);
 
         $controller = $this->makeController(null, $mockService);
-        $controller->placeBet($request, $player, $game, $bet);
+        $controller->placeBet($request, $game, $player, $bet);
     }
 
     public function test_placeBet_mockResponse_placeBet()
@@ -172,7 +220,7 @@ class FunkyControllerTest extends TestCase
             ->with($player);
 
         $controller = $this->makeController(null, null, $mockResponse);
-        $controller->placeBet($request, $player, $game, $bet);
+        $controller->placeBet($request, $game, $player, $bet);
     }
 
     public function test_settleBet_mockValidator_validate()
@@ -255,7 +303,7 @@ class FunkyControllerTest extends TestCase
         $controller->settleBet($request, $game, $mockPlayer, $bet);
     }
 
-    public function test_settleBet_mockBet_init()
+    public function test_settleBet_mockBet_initByGamePlayerRoundDetID()
     {
         $request = new Request([
             'betResultReq' => [
@@ -272,8 +320,56 @@ class FunkyControllerTest extends TestCase
 
         $mockBet = $this->createMock(ZirconBet::class);
         $mockBet->expects($this->once())
-            ->method('init')
-            ->with($player, $game, 'refNo', 10.0, 5.0);
+            ->method('initByGamePlayerRoundDetID')
+            ->with($game, $player, 'refNo');
+
+        $controller = $this->makeController();
+        $controller->settleBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_settleBet_mockBet_setTotalWin()
+    {
+        $request = new Request([
+            'betResultReq' => [
+                'gameCode' => 1,
+                'playerId' => 2,
+                'winAmount' => 10.0,
+                'effectiveStake' => 5.0
+            ],
+            'refNo' => 'refNo'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setTotalWin')
+            ->with(10.0);
+
+        $controller = $this->makeController();
+        $controller->settleBet($request, $game, $player, $mockBet);
+    }
+
+    public function test_settleBet_mockBet_setTurnover()
+    {
+        $request = new Request([
+            'betResultReq' => [
+                'gameCode' => 1,
+                'playerId' => 2,
+                'winAmount' => 10.0,
+                'effectiveStake' => 5.0
+            ],
+            'refNo' => 'refNo'
+        ]);
+
+        $game = $this->createStub(CasinoGame::class);
+        $player = $this->createStub(Player::class);
+
+        $mockBet = $this->createMock(ZirconBet::class);
+        $mockBet->expects($this->once())
+            ->method('setTurnover')
+            ->with(5.0);
 
         $controller = $this->makeController();
         $controller->settleBet($request, $game, $player, $mockBet);

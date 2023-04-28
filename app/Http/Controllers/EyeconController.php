@@ -42,41 +42,44 @@ class EyeconController extends Controller
         $this->response = $response;
     }
 
-    public function entry(Request $request, Player $player, CasinoGame $game, ZirconBet $bet)
+    public function entry(Request $request, CasinoGame $game, Player $player, ZirconBet $bet)
     {
         $this->validator->validate($request, self::EYECON_REQUEST);
 
         switch($request->type){
             case 'BET':
-                return $this->bet($request, $player, $game, $bet);
+                return $this->bet($request, $game, $player, $bet);
             case 'WIN':
             case 'LOSE':
-                return $this->settle($request, $player, $game, $bet);
+                return $this->settle($request, $game, $player, $bet);
             default:
                 throw new \Exception('Invalid type');
         }
     }
 
-    private function bet(Request $request, IPlayer $player, IGame $game, IBet $bet)
+    private function bet(Request $request, IGame $game, IPlayer $player, IBet $bet)
     {
         $game->initByGameID($request->gameid);
 
         $player->initBySessionIDGameID($request->guid, $game);
         
-        $bet->new($player, $game, $request->round, $request->wager, $player->getIp());
+        $bet->new($player, $game, $request->round);
+        $bet->setStake($request->wager);
+        $bet->setIp($player->getIp());
         
         $this->service->startBet($player, $game, $bet);
 
         return $this->response->balance($player);
     }
 
-    private function settle(Request $request, IPlayer $player, IGame $game, IBet $bet)
+    private function settle(Request $request, IGame $game, IPlayer $player, IBet $bet)
     {
         $game->initByGameID($request->gameid);
 
         $player->initByClientID($request->uid);
 
-        $bet->init($player, $game, $request->round, $request->win);
+        $bet->initByGamePlayerRoundDetID($game, $player, $request->round);
+        $bet->setTotalWin($request->win);
 
         $this->service->settleBet($player, $bet);
 
