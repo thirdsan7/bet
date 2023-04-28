@@ -185,7 +185,7 @@ class ResultBetTest extends TestCase
             ]);
     }
 
-    public function test_sellBet_mockCWApi_expectedCWApiParams()
+    public function test_resultBet_mockCWApi_expectedCWApiParams()
     {
         $request = [
             'roundDetID' => 'roundDetID_mockCWAPI',
