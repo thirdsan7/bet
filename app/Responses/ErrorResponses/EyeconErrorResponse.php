@@ -9,7 +9,7 @@ class EyeconErrorResponse implements IErrorResponse
     /**
      * formatted eyecon response for invalidInput
      *
-     * @param  mixed $message
+     * @param  string $message
      * @return Response
      */
     public function invalidInput(string $message): Response
