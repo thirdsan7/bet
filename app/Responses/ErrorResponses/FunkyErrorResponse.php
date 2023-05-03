@@ -76,7 +76,7 @@ class FunkyErrorResponse implements IErrorResponse
     /**
      * formatted funky response for somethingWentWrong
      *
-     * @param  mixed $message
+     * @param  string $message
      * @return Response
      */
     public function somethingWentWrong(string $message): Response

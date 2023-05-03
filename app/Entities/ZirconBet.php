@@ -302,9 +302,9 @@ class ZirconBet implements IBet
     /**
      * initialize bet class via getting data from DB
      *
-     * @param  mixed $game
-     * @param  mixed $player
-     * @param  mixed $roundDetID
+     * @param  IGame $game
+     * @param  IPlayer $player
+     * @param  string $roundDetID
      * @return void
      * @throws RoundNotFoundException
      */
